@@ -34,8 +34,9 @@ end
 to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 2, this only involves the execution of actions (and advancing the tick counter).
-  execute-actions
-  if ticks = ((max-pxcor + 1) * (max-pycor + 1)) [stop]
+  suck-check
+  if ticks = (((max-pxcor + 1) * (max-pycor + 1)) - 1) [stop]
+  move-turtle
   tick
 end
 
@@ -62,35 +63,37 @@ to setup-ticks
   ; In this method you may start the tick counter.
 end
 
-
-; --- Execute actions ---
-to execute-actions
-  ; Here you should put the code related to the actions performed by your smart vacuum cleaner: moving and cleaning.
-  ; You can separate these actions into two different methods if you want, but these methods should only be called from here!
-  ask turtles [
+to suck-check
+ ask turtles [
     if pcolor = brown [
       set pcolor white
     ]
+ ]
+end
 
-    if ticks = 2
-    [left 90]
-    if ticks = 3
-    [left 90]
-    if ticks = 5
-    [right 90]
-    if ticks = 6
-    [right 90]
+; --- Execute actions ---
+to move-turtle
+  ; Here you should put the code related to the actions performed by your smart vacuum cleaner: moving and cleaning.
+  ; You can separate these actions into two different methods if you want, but these methods should only be called from here!
+  ask turtles [
 
-    if ticks < 8
-    [forward 1]
+    if ticks > 0[
+      if xcor = max-pxcor
+      [left 90]
+      if xcor = min-pxcor
+      [right 90]
+    ]
+
+    forward 1
+
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 364
 39
-669
-506
+654
+490
 -1
 -1
 14.065
@@ -104,9 +107,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-20
+19
 0
-30
+29
 1
 1
 1
