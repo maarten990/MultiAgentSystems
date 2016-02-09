@@ -43,7 +43,7 @@ end
 to setup-patches
   ; In this method you may create the environment (patches), using colors to define dirty and cleaned cells.
   ask patches [
-    ifelse random 4 = 1
+    ifelse random 100 <= dirt_pct
     [set pcolor brown]
     [set pcolor white]
   ]
@@ -140,7 +140,7 @@ MONITOR
 177
 148
 dirt
-count patches with [pcolor = grey]
+count patches with [pcolor = brown]
 17
 1
 11
@@ -154,7 +154,7 @@ dirt_pct
 dirt_pct
 0
 100
-50
+25
 1
 1
 NIL
