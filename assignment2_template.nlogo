@@ -52,7 +52,7 @@ end
 
 ; --- Setup turtles ---
 to setup-turtles
-  ; In this method you may create the agents (in this case, there is only 1 agent).
+  create-turtles 1 [ setxy 0 0 set color pink set shape "sheep" ]
 end
 
 
