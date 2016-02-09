@@ -52,7 +52,7 @@ end
 
 ; --- Setup turtles ---
 to setup-turtles
-  create-turtles 1 [ setxy 0 0 set color pink set shape "sheep" ]
+  create-turtles 1 [ setxy 0 0 set color pink set shape "sheep" set heading 90 ]
 end
 
 
@@ -70,17 +70,28 @@ to execute-actions
     if pcolor = brown [
       set pcolor white
     ]
+
+    if ticks = 2
+    [left 90]
+    if ticks = 3
+    [left 90]
+    if ticks = 5
+    [right 90]
+    if ticks = 6
+    [right 90]
+
+    forward 1
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+232
 10
-455
-206
+477
+262
 -1
 -1
-55.0
+73.7
 1
 10
 1
