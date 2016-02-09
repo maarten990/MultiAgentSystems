@@ -35,7 +35,6 @@ to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 2, this only involves the execution of actions (and advancing the tick counter).
   suck-check
-  if ticks = (((max-pxcor + 1) * (max-pycor + 1)) - 1) [stop]
   move-turtle
   tick
 end
