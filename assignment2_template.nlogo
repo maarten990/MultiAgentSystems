@@ -48,6 +48,11 @@ to setup-patches
     ifelse random 100 <= dirt_pct
     [set pcolor brown]
     [set pcolor white]
+    if random 100 <= black_pct
+    [set pcolor black]
+  ]
+  ask patch 0 0 [
+   set pcolor white
   ]
 end
 
@@ -92,8 +97,8 @@ end
 GRAPHICS-WINDOW
 364
 39
-654
-490
+655
+491
 -1
 -1
 14.065
@@ -170,7 +175,22 @@ dirt_pct
 dirt_pct
 0
 100
-56
+62
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+4
+161
+176
+194
+black_pct
+black_pct
+0
+100
+9
 1
 1
 NIL
