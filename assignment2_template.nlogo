@@ -35,7 +35,7 @@ to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 2, this only involves the execution of actions (and advancing the tick counter).
   execute-actions
-  if ticks = 8 [stop]
+  if ticks = ((max-pxcor + 1) * (max-pycor + 1)) [stop]
   tick
 end
 
@@ -87,13 +87,13 @@ to execute-actions
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-232
-10
-477
-262
+364
+39
+669
+506
 -1
 -1
-73.7
+14.065
 1
 10
 1
@@ -104,9 +104,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-2
+20
 0
-2
+30
 1
 1
 1
