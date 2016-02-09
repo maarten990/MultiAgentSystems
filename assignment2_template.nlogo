@@ -66,6 +66,11 @@ end
 to execute-actions
   ; Here you should put the code related to the actions performed by your smart vacuum cleaner: moving and cleaning.
   ; You can separate these actions into two different methods if you want, but these methods should only be called from here!
+  ask turtles [
+    if pcolor = brown [
+      set pcolor white
+    ]
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
