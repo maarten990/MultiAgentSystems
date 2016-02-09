@@ -35,6 +35,7 @@ to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 2, this only involves the execution of actions (and advancing the tick counter).
   execute-actions
+  if ticks = 8 [stop]
   tick
 end
 
@@ -80,7 +81,8 @@ to execute-actions
     if ticks = 6
     [right 90]
 
-    forward 1
+    if ticks < 8
+    [forward 1]
   ]
 end
 @#$#@#$#@
@@ -165,7 +167,7 @@ dirt_pct
 dirt_pct
 0
 100
-25
+56
 1
 1
 NIL
