@@ -22,9 +22,11 @@ globals []
 
 ; --- Setup ---
 to setup
+  clear-all
   setup-patches
   setup-turtles
   setup-ticks
+  reset-ticks
 end
 
 
@@ -40,6 +42,11 @@ end
 ; --- Setup patches ---
 to setup-patches
   ; In this method you may create the environment (patches), using colors to define dirty and cleaned cells.
+  ask patches [
+    ifelse random 4 = 1
+    [set pcolor brown]
+    [set pcolor white]
+  ]
 end
 
 
@@ -65,10 +72,10 @@ GRAPHICS-WINDOW
 210
 10
 455
-195
+206
 -1
 -1
-51.33333333333334
+55.0
 1
 10
 1
