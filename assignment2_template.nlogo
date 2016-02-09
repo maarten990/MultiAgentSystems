@@ -19,7 +19,6 @@
 ; This template does not contain any global variables, but if you need them you can add them here.
 globals []
 
-
 ; --- Setup ---
 to setup
   clear-all
@@ -80,16 +79,15 @@ to move-turtle
   ; Here you should put the code related to the actions performed by your smart vacuum cleaner: moving and cleaning.
   ; You can separate these actions into two different methods if you want, but these methods should only be called from here!
   ask turtles [
-
-    if ticks > 0[
-      if xcor = max-pxcor
+    ifelse [pcolor] of patch-ahead 1 = black
+    [ifelse random 1 = 1
       [left 90]
-      if xcor = min-pxcor
-      [right 90]
-    ]
-
-    forward 1
-
+      [right 90]]
+    [ifelse random 9 <= 7
+      [forward 1]
+      [ifelse random 1 = 1
+        [left 90]
+        [right 90]]]
   ]
 end
 @#$#@#$#@
