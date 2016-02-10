@@ -43,10 +43,10 @@ end
 to setup-patches
   ; In this method you may create the environment (patches), using colors to define dirty and cleaned cells.
   ask patches [
-    ifelse random 100 <= dirt_pct
+    ifelse random 100 < dirt_pct
     [set pcolor brown]
     [set pcolor white]
-    if random 100 <= black_pct
+    if random 100 < black_pct
     [set pcolor black]
   ]
   ask patch 0 0 [
@@ -80,12 +80,12 @@ to move-turtle
   ; You can separate these actions into two different methods if you want, but these methods should only be called from here!
   ask turtles [
     ifelse [pcolor] of patch-ahead 1 = black
-    [ifelse random 1 = 1
+    [ifelse random 1 < 1
       [left 90]
       [right 90]]
-    [ifelse random 9 <= 7
+    [ifelse random 10 < 8
       [forward 1]
-      [ifelse random 1 = 1
+      [ifelse random 1 < 1
         [left 90]
         [right 90]]]
   ]
@@ -187,7 +187,7 @@ black_pct
 black_pct
 0
 100
-9
+0
 1
 1
 NIL
