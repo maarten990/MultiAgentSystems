@@ -80,12 +80,12 @@ to move-turtle
   ; You can separate these actions into two different methods if you want, but these methods should only be called from here!
   ask turtles [
     ifelse [pcolor] of patch-ahead 1 = black
-    [ifelse random 1 < 1
+    [ifelse random 100 < 50
       [left 90]
       [right 90]]
-    [ifelse random 10 < 8
+    [ifelse random 100 < 80
       [forward 1]
-      [ifelse random 1 < 1
+      [ifelse random 100 < 50
         [left 90]
         [right 90]]]
   ]
@@ -187,7 +187,7 @@ black_pct
 black_pct
 0
 100
-0
+22
 1
 1
 NIL
