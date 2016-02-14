@@ -79,7 +79,7 @@ to move-turtle
   ; Here you should put the code related to the actions performed by your smart vacuum cleaner: moving and cleaning.
   ; You can separate these actions into two different methods if you want, but these methods should only be called from here!
   ask turtles [
-    ifelse [pcolor] of patch-ahead 1 = black
+    ifelse not can-move? 1 or [pcolor] of patch-ahead 1 = black
     [ifelse random 100 < 50
       [left 90]
       [right 90]]
@@ -105,8 +105,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 0
 19
@@ -187,7 +187,7 @@ black_pct
 black_pct
 0
 100
-22
+20
 1
 1
 NIL
