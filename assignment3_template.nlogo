@@ -14,8 +14,8 @@ breed [vacuums vacuum]
 vacuums-own [beliefs desire intention]
 
 to setup
+  clear-all
   set time 0
-  set total_dirty count patches with [pcolor = brown]
   setup-patches
   setup-vacuums
   setup-ticks
@@ -25,9 +25,16 @@ to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 3, this involves updating desires, beliefs and intentions, and executing actions (and advancing the tick counter).
   update-desires
-  update-beliefs
-  update-intentions
-  execute-actions
+  ask vacuums [
+    ifelse desire = "stop"
+      [stop]
+      [
+        update-beliefs
+        update-intentions
+        execute-actions
+      ]
+  ]
+
   tick
 end
 
@@ -37,6 +44,8 @@ to setup-patches
     [set pcolor brown]
     [set pcolor white]
   ]
+
+  set total_dirty count patches with [pcolor = brown]
 end
 
 to setup-vacuums
@@ -45,8 +54,8 @@ to setup-vacuums
     set color pink
     set shape "sheep"
     set heading 90
-    set beliefs
-    ]
+    set beliefs [list pxcor pycor] of patches with [pcolor = brown]
+  ]
 
 end
 
@@ -55,8 +64,11 @@ to setup-ticks
 end
 
 to update-desires
-  ; At the beginning your agent should have the desire to clean all the dirt.
-  ; If it realises that there is no more dirt, its desire should change to something like 'stop and turn off'.
+  ask vacuums [
+    ifelse total_dirty > 0
+      [set desire "suck"]
+      [set desire "stop"]
+  ]
 end
 
 to update-beliefs
@@ -68,12 +80,33 @@ to update-beliefs
 end
 
 to update-intentions
-  ; You should update your agent's intentions here.
-  ; The agent's intentions should be dependent on its beliefs and desires.
+  ask vacuums [
+    set intention first beliefs
+  ]
 end
 
 to execute-actions
   ; Here you should put the code related to the actions performed by your agent: moving and cleaning (and in Assignment 3.3, throwing away dirt).
+  ask vacuums [
+    ifelse list round xcor round ycor = intention
+      [suck-location]
+      [move-to-location first intention last intention]
+  ]
+end
+
+to suck-location
+  ask vacuums [
+    set pcolor white
+    set beliefs remove-item 0 beliefs
+  ]
+  set total_dirty total_dirty - 1
+end
+
+to move-to-location [ x y ]
+  ask vacuums [
+    facexy x y
+  ]
+  forward 1
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -112,7 +145,7 @@ dirt_pct
 dirt_pct
 0
 100
-50
+3
 1
 1
 NIL
