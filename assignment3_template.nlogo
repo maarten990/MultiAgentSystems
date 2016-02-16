@@ -79,8 +79,17 @@ to update-beliefs
 
 end
 
+to-report distance-coords [coords]
+  let result 0
+  ask vacuums [
+    set result distancexy first coords last coords
+  ]
+  report result
+end
+
 to update-intentions
   ask vacuums [
+    set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
     set intention first beliefs
   ]
 end
@@ -145,7 +154,7 @@ dirt_pct
 dirt_pct
 0
 100
-3
+4
 1
 1
 NIL
