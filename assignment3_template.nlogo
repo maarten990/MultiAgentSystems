@@ -1,6 +1,6 @@
 ; 1) total_dirty: this variable represents the amount of dirty cells in the environment.
 ; 2) time: the total simulation time.
-globals [total_dirty time]
+globals [total_dirty time can]
 
 ; --- Agents ---
 ; The following types of agent (called 'breeds' in NetLogo) are given. (Note: in Assignment 3.3, you could implement the garbage can as an agent as well.)
@@ -11,7 +11,7 @@ breed [vacuums vacuum]
 ; 1) beliefs: the agent's belief base about locations that contain dirt
 ; 2) desire: the agent's current desire
 ; 3) intention: the agent's current intention
-vacuums-own [beliefs desire intention]
+vacuums-own [beliefs desire intention bag]
 
 to setup
   clear-all
@@ -19,22 +19,24 @@ to setup
   setup-patches
   setup-vacuums
   setup-ticks
+  setup-can
 end
 
 to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 3, this involves updating desires, beliefs and intentions, and executing actions (and advancing the tick counter).
   update-desires
+  let break false
   ask vacuums [
     ifelse desire = "stop"
-      [stop]
+      [set break true]
       [
         update-beliefs
         update-intentions
         execute-actions
       ]
   ]
-
+  if break [stop]
   tick
 end
 
@@ -63,6 +65,13 @@ to setup-ticks
   reset-ticks
 end
 
+to setup-can
+  let x random 25 - 12
+  let y random 25 - 12
+  set can list x y
+  ask patch x y [set pcolor blue]
+end
+
 to update-desires
   ask vacuums [
     ifelse total_dirty > 0
@@ -89,8 +98,11 @@ end
 
 to update-intentions
   ask vacuums [
-    set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
-    set intention first beliefs
+    ifelse bag < capacity [
+      set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
+      set intention first beliefs
+    ]
+    [set intention can]
   ]
 end
 
@@ -98,17 +110,20 @@ to execute-actions
   ; Here you should put the code related to the actions performed by your agent: moving and cleaning (and in Assignment 3.3, throwing away dirt).
   ask vacuums [
     ifelse list round xcor round ycor = intention
-      [suck-location]
+      [act-location]
       [move-to-location first intention last intention]
   ]
 end
 
-to suck-location
+to act-location
   ask vacuums [
-    set pcolor white
-    set beliefs remove-item 0 beliefs
+    ifelse pcolor = brown [
+        set pcolor white
+        set beliefs remove-item 0 beliefs
+        set bag bag + 1
+        set total_dirty total_dirty - 1]
+      [set bag 0]
   ]
-  set total_dirty total_dirty - 1
 end
 
 to move-to-location [ x y ]
@@ -154,7 +169,7 @@ dirt_pct
 dirt_pct
 0
 100
-4
+11
 1
 1
 NIL
@@ -249,8 +264,8 @@ MONITOR
 295
 778
 340
-Total simulation time.
-time
+Current bag content
+[bag] of vacuum 0
 17
 1
 11
@@ -265,6 +280,21 @@ The agent's current intention.
 17
 1
 11
+
+SLIDER
+36
+394
+208
+427
+capacity
+capacity
+0
+10
+5
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
