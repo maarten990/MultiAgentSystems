@@ -1,4 +1,4 @@
-globals [total_dirty time color_list]
+globals [time color_list]
 
 breed [vacuums vacuum]
 breed [vision-cones vision-cone]
@@ -17,19 +17,13 @@ end
 to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 4.1, this involves updating desires, beliefs and intentions, and executing actions (and advancing the tick counter).
-  let break false
   ask vacuums [
-    set break true
-    if desire != "stop"
-      [
-        set break false
-        update-beliefs
-        update-desires
-        update-intentions
-        execute-actions
-      ]
+    update-beliefs
+    update-desires
+    update-intentions
+    execute-actions
   ]
-  if break [stop]
+  tick
 end
 
 to setup-patches
@@ -40,8 +34,6 @@ to setup-patches
     ]
     [set pcolor white]
   ]
-
-  set total_dirty count patches with [pcolor != white]
 end
 
 to setup-vacuums
@@ -64,7 +56,7 @@ end
 to update-desires
   ask vacuums [
     ifelse empty? beliefs
-      [set desire "stop"]
+      [set desire "roam"]
       [set desire "suck"]
   ]
 end
@@ -72,8 +64,8 @@ end
 to update-beliefs
  ; Please remember that you should use this method whenever your agents changes its position.
  ask vacuums [
-   let index who
-   let new_beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = item index color_list]
+   let my_color own_color
+   let new_beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = my_color]
    foreach new_beliefs [
      if not member? ? beliefs [
        set beliefs lput ? beliefs
@@ -84,7 +76,7 @@ end
 
 to update-intentions
   ask vacuums [
-    if desire != "stop"
+    if desire != "roam"
     [
       set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
       set intention first beliefs
@@ -95,27 +87,25 @@ end
 to execute-actions
   ; Here you should put the code related to the actions performed by your agent: moving and cleaning (and in Assignment 3.3, throwing away dirt).
   ask vacuums [
-    if desire != "stop"
-    [
+    ifelse desire != "roam" [
       ifelse list round xcor round ycor = intention
         [act-location]
         [move-to-location first intention last intention]
+    ] [
+      ifelse can-move? 1
+        [forward 1]
+        [left random 360]
     ]
   ]
 end
 
 to act-location
-  ;ask vacuums [
-    set pcolor white
-    set beliefs remove-item 0 beliefs
-    set total_dirty total_dirty - 1
-  ;]
+  set pcolor white
+  set beliefs remove-item 0 beliefs
 end
 
 to move-to-location [ x y ]
-  ask vacuums [
-    facexy x y
-  ]
+  facexy x y
   forward 1
 end
 
@@ -169,7 +159,7 @@ dirt_pct
 dirt_pct
 0
 100
-34
+32
 1
 1
 NIL
@@ -235,7 +225,7 @@ num_agents
 num_agents
 2
 7
-3
+4
 1
 1
 NIL
@@ -250,7 +240,7 @@ vision_radius
 vision_radius
 0
 100
-3
+4
 1
 1
 NIL
