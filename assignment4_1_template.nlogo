@@ -1,59 +1,16 @@
-; UVA/VU - Multi-Agent Systems
-; Lecturers: T. Bosse & M.C.A. Klein
-; Lab assistants: D. Formolo & L. Medeiros
-
-
-; --- Assignment 4.1 - Template ---
-; Please use this template as a basis for the code to generate the behaviour of your team of vacuum cleaners.
-; However, feel free to extend this with any variable or method you think is necessary.
-
-
-; --- Settable variables ---
-; The following settable variables are given as part of the 'Interface' (hence, these variables do not need to be declared in the code):
-;
-; 1) dirt_pct: this variable represents the percentage of dirty cells in the environment.
-;
-; 2) num_agents: number of vacuum cleaner agents in the simularion.
-;
-; 3) vision_radius: distance (in terms of number of cells) that the agents can 'see'
-; For instance, if this radius is 3, then agents will be able to observe dirt in a cell that is 3 cells away from their own location.
-
-
-; --- Global variables ---
-; The following global variables are given.
-;
-; 1) total_dirty: this variable represents the amount of dirty cells in the environment.
-; 2) time: the total simulation time.
 globals [total_dirty time]
 
-
-; --- Agents ---
-; The following types of agent (called 'breeds' in NetLogo) are given.
-;
-; 1) vacuums: vacuum cleaner agents.
 breed [vacuums vacuum]
-
-
-; --- Local variables ---
-; The following local variables are given.
-;
-; 1) beliefs: the agent's belief base about locations that contain dirt
-; 2) desire: the agent's current desire
-; 3) intention: the agent's current intention
-; 4) own_color: the agent's belief about its own target color
 vacuums-own [beliefs desire intention own_color]
 
-
-; --- Setup ---
 to setup
+  clear-all
   set time 0
   setup-patches
   setup-vacuums
   setup-ticks
 end
 
-
-; --- Main processing cycle ---
 to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 4.1, this involves updating desires, beliefs and intentions, and executing actions (and advancing the tick counter).
@@ -64,46 +21,52 @@ to go
   tick
 end
 
-
-; --- Setup patches ---
 to setup-patches
-  ; In this method you may create the environment (patches), using colors to define cells with various types of dirt.
+  ask patches [
+    ifelse random 100 < dirt_pct
+    [set pcolor brown]
+    [set pcolor white]
+  ]
+
+  set total_dirty count patches with [pcolor = brown]
 end
 
-
-; --- Setup vacuums ---
 to setup-vacuums
-  ; In this method you may create the vacuum cleaner agents.
+  create-vacuums num_agents [
+    setxy 0 0
+    set color pink ;prolly need some color doing stuff
+    set shape "sheep"
+    set heading 90
+    set beliefs [list pxcor pycor] of patches with [pcolor = brown]
+  ]
 end
 
-
-; --- Setup ticks ---
 to setup-ticks
-  ; In this method you may start the tick counter.
+  reset-ticks
 end
 
-
-; --- Update desires ---
 to update-desires
-  ; You should update your agent's desires here.
-  ; Keep in mind that now you have more than one agent.
+  ask vacuums [
+    ifelse total_dirty > 0
+      [set desire "suck"]
+      [set desire "stop"]
+  ]
 end
 
-
-; --- Update beliefs ---
 to update-beliefs
- ; You should update your agent's beliefs here.
  ; Please remember that you should use this method whenever your agents changes its position.
 end
 
-
-; --- Update intentions ---
 to update-intentions
-  ; You should update your agent's intentions here.
+  ask vacuums [
+    ifelse bag < capacity [
+      set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
+      set intention first beliefs
+    ]
+    [set intention can]
+  ]
 end
 
-
-; --- Execute actions ---
 to execute-actions
   ; Here you should put the code related to the actions performed by your agent: moving, cleaning, and (actively) looking around.
   ; Please note that your agents should perform only one action per tick!
