@@ -1,14 +1,16 @@
-globals [time color_list]
+globals [time color_list turtle_colors]
+
+;turtle colors ( agent.index ) { return agent.color }
 
 breed [vacuums vacuum]
 breed [vision-cones vision-cone]
-vacuums-own [beliefs desire intention own_color other_colors outgoing_messages incoming_messages]
+vacuums-own [beliefs desire intention own_color other_colors outgoing_messages incoming_messages patches_found]
 
 to setup
   clear-all
   set time 0
   set color_list [orange lime turquoise cyan sky violet magenta]
-
+  set turtle_colors [0 0 0 0 0 0 0] ;key = turtle, value = color
   setup-patches
   setup-vacuums
   setup-ticks
@@ -40,14 +42,15 @@ end
 to setup-vacuums
   create-vacuums num_agents [
     setxy 0 0
-    set color item who color_list
-    set own_color item who color_list
+    set color 0
+    set own_color 0
     set shape "sheep"
     set heading 90
     let index who
-    set beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = item index color_list]
+    set beliefs []
     set incoming_messages []
     set outgoing_messages []
+    set patches_found [0 0 0 0 0 0 0]
     attach-vision-cone
   ]
 end
@@ -68,17 +71,45 @@ to update-beliefs
  ; Please remember that you should use this method whenever your agents changes its position.
  ask vacuums [
    let my_color own_color
-   let new_beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = my_color]
-   set outgoing_messages [list pxcor pycor] of patches in-radius vision_radius with [member? pcolor color_list]
-   foreach new_beliefs [
-     if not member? ? beliefs [
-       set beliefs lput ? beliefs
+   ifelse own_color != 0 [
+     let new_beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = my_color]
+     set outgoing_messages [list pxcor pycor] of patches in-radius vision_radius with [member? pcolor color_list]
+     foreach new_beliefs [
+       if not member? ? beliefs [
+         set beliefs lput ? beliefs
+       ]
+     ]
+
+     foreach incoming_messages [
+       if not member? ? beliefs [
+         set beliefs lput ? beliefs
+       ]
      ]
    ]
-
-   foreach incoming_messages [
-     if not member? ? beliefs [
-       set beliefs lput ? beliefs
+   ;else if it has no color yet
+   [
+     ;count colors
+     foreach [pcolor] of patches in-radius vision_radius with [pcolor != 0] [
+       let index position ? color_list
+       show index ;this is where shit goes down. TODO! Next Time!! eh
+       if index != false [
+         let val (item index patches_found + 1)
+         set patches_found replace-item index patches_found val
+       ]
+     ]
+     ;for all colors
+     foreach patches_found [
+       ;if it has at least 5 of a color
+       if ? > 4 [
+         ;if no one else has that color
+         let color_has_agent position ? turtle_colors
+         if color_has_agent != false[
+           ;set this agent's color
+           set color ?
+           set own_color ?
+           set turtle_colors replace-item who turtle_colors ?
+         ]
+        ]
      ]
    ]
  ]
@@ -136,11 +167,12 @@ end
 to send-messages
   ask vacuums [
     foreach outgoing_messages [
-      let msg_color [pcolor] of  patch first ? last ?
+      let msg_color [pcolor] of patch first ? last ?
       if member? msg_color color_list [
-        let index position msg_color color_list
-        show msg_color
-        ask vacuum index [set incoming_messages lput ? incoming_messages]
+        let index position msg_color turtle_colors
+        if index != false [
+          ask vacuum index [set incoming_messages lput ? incoming_messages]
+        ]
       ]
     ]
 
@@ -184,7 +216,7 @@ dirt_pct
 dirt_pct
 0
 100
-3
+31
 1
 1
 NIL
@@ -250,7 +282,7 @@ num_agents
 num_agents
 2
 7
-3
+4
 1
 1
 NIL
@@ -265,7 +297,7 @@ vision_radius
 vision_radius
 0
 100
-2
+0
 1
 1
 NIL
