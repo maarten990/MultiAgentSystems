@@ -1,6 +1,7 @@
 globals [total_dirty time color_list]
 
 breed [vacuums vacuum]
+breed [vision-cones vision-cone]
 vacuums-own [beliefs desire intention own_color]
 
 to setup
@@ -16,11 +17,19 @@ end
 to go
   ; This method executes the main processing cycle of an agent.
   ; For Assignment 4.1, this involves updating desires, beliefs and intentions, and executing actions (and advancing the tick counter).
-  update-desires
-  update-beliefs
-  update-intentions
-  execute-actions
-  tick
+  let break false
+  ask vacuums [
+    set break true
+    if desire != "stop"
+      [
+        set break false
+        update-beliefs
+        update-desires
+        update-intentions
+        execute-actions
+      ]
+  ]
+  if break [stop]
 end
 
 to setup-patches
@@ -42,7 +51,9 @@ to setup-vacuums
     set own_color item who color_list
     set shape "sheep"
     set heading 90
-    set beliefs [list pxcor pycor] of patches with [pcolor != white]
+    let index who
+    set beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = item index color_list]
+    attach-vision-cone
   ]
 end
 
@@ -52,25 +63,74 @@ end
 
 to update-desires
   ask vacuums [
-    ifelse total_dirty > 0
-      [set desire "suck"]
+    ifelse empty? beliefs
       [set desire "stop"]
+      [set desire "suck"]
   ]
 end
 
 to update-beliefs
  ; Please remember that you should use this method whenever your agents changes its position.
- in-radius
+ ask vacuums [
+   let index who
+   let new_beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = item index color_list]
+   foreach new_beliefs [
+     if not member? ? beliefs [
+       set beliefs lput ? beliefs
+     ]
+   ]
+ ]
 end
 
 to update-intentions
   ask vacuums [
+    if desire != "stop"
+    [
+      set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
+      set intention first beliefs
+    ]
   ]
 end
 
 to execute-actions
-  ; Here you should put the code related to the actions performed by your agent: moving, cleaning, and (actively) looking around.
-  ; Please note that your agents should perform only one action per tick!
+  ; Here you should put the code related to the actions performed by your agent: moving and cleaning (and in Assignment 3.3, throwing away dirt).
+  ask vacuums [
+    if desire != "stop"
+    [
+      ifelse list round xcor round ycor = intention
+        [act-location]
+        [move-to-location first intention last intention]
+    ]
+  ]
+end
+
+to act-location
+  ;ask vacuums [
+    set pcolor white
+    set beliefs remove-item 0 beliefs
+    set total_dirty total_dirty - 1
+  ;]
+end
+
+to move-to-location [ x y ]
+  ask vacuums [
+    facexy x y
+  ]
+  forward 1
+end
+
+to-report distance-coords [coords]
+  report distancexy first coords last coords
+end
+
+to attach-vision-cone
+  hatch 1 [
+    set breed vision-cones
+    create-link-from myself [tie]
+    set shape "vision"
+    set color gray
+    set size vision_radius * 2
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -109,7 +169,7 @@ dirt_pct
 dirt_pct
 0
 100
-19
+34
 1
 1
 NIL
@@ -221,7 +281,7 @@ Desire of vacuum 1
 MONITOR
 9
 305
-118
+137
 350
 Beliefs of vacuum 1
 [beliefs] of vacuum 0
@@ -232,7 +292,7 @@ Beliefs of vacuum 1
 MONITOR
 150
 313
-262
+292
 358
 Beliefs of vacuum 2
 [beliefs] of vacuum 1
@@ -436,12 +496,6 @@ circle
 false
 0
 Circle -7500403 true true 0 0 300
-
-circle 2
-false
-0
-Circle -7500403 true true 0 0 300
-Circle -16777216 true false 30 30 240
 
 cow
 false
@@ -685,6 +739,11 @@ true
 Polygon -2674135 true false 75 90 105 150 165 150 135 135 105 135 90 90 75 90
 Circle -2674135 true false 105 135 30
 Rectangle -2674135 true false 75 105 90 120
+
+vision
+false
+1
+Circle -2674135 false true 2 2 295
 
 wheel
 false
