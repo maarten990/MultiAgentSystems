@@ -1,124 +1,151 @@
-; UVA/VU - Multi-Agent Systems
-; Lecturers: T. Bosse & M.C.A. Klein
-; Lab assistants: D. Formolo & L. Medeiros
+globals [time color_list]
 
-
-; --- Assignment 4.2 & 4.3 - Template ---
-; Please use this template as a basis for the code to generate the behaviour of your team of vacuum cleaners.
-; However, feel free to extend this with any variable or method you think is necessary.
-
-
-; --- Settable variables ---
-; The following settable variables are given as part of the 'Interface' (hence, these variables do not need to be declared in the code):
-;
-; 1) dirt_pct: this variable represents the percentage of dirty cells in the environment.
-;
-; 2) num_agents: number of vacuum cleaner agents in the simularion.
-;
-; 3) vision_radius: distance (in terms of number of cells) that the agents can 'see'
-; For instance, if this radius is 3, then agents will be able to observe dirt in a cell that is 3 cells away from their own location.
-
-
-; --- Global variables ---
-; The following global variables are given.
-;
-; 1) total_dirty: this variable represents the amount of dirty cells in the environment.
-; 2) time: the total simulation time.
-globals [total_dirty time]
-
-
-; --- Agents ---
-; The following types of agent (called 'breeds' in NetLogo) are given.
-;
-; 1) vacuums: vacuum cleaner agents.
 breed [vacuums vacuum]
-
-
-; --- Local variables ---
-; The following local variables are given.
-;
-; 1) beliefs: the agent's belief base about locations that contain dirt
-; 2) desire: the agent's current desire
-; 3) intention: the agent's current intention
-; 4) own_color: the agent's belief about its own target color
-; 5) other_colors: the agent's belief about the target colors of other agents
-; 6) outgoing_messages: list of messages sent by the agent to other agents
-; 7) incoming_messages: list of messages received by the agent from other agents
+breed [vision-cones vision-cone]
 vacuums-own [beliefs desire intention own_color other_colors outgoing_messages incoming_messages]
 
-
-; --- Setup ---
 to setup
+  clear-all
   set time 0
+  set color_list [orange lime turquoise cyan sky violet magenta]
+
   setup-patches
   setup-vacuums
   setup-ticks
 end
 
-
-; --- Main processing cycle ---
 to go
   ; This method executes the main processing cycle of an agent.
-  ; For Assignment 4.2 and 4.3, this involves updating desires, beliefs and intentions, executing actions, and sending messages (and advancing the tick counter).
-  update-desires
-  update-beliefs
-  update-intentions
-  execute-actions
-  send-messages
+  ; For Assignment 4.1, this involves updating desires, beliefs and intentions, and executing actions (and advancing the tick counter).
+  ask vacuums [
+    update-beliefs
+    update-desires
+    update-intentions
+    execute-actions
+    send-messages
+  ]
   tick
 end
 
-
-; --- Setup patches ---
 to setup-patches
-  ; In this method you may create the environment (patches), using colors to define cells with various types of dirt.
+  ask patches [
+    ifelse random 100 < dirt_pct
+    [
+      set pcolor item random num_agents color_list
+    ]
+    [set pcolor white]
+  ]
 end
 
-
-; --- Setup vacuums ---
 to setup-vacuums
-  ; In this method you may create the vacuum cleaner agents.
+  create-vacuums num_agents [
+    setxy 0 0
+    set color item who color_list
+    set own_color item who color_list
+    set shape "sheep"
+    set heading 90
+    let index who
+    set beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = item index color_list]
+    set incoming_messages []
+    set outgoing_messages []
+    attach-vision-cone
+  ]
 end
 
-
-; --- Setup ticks ---
 to setup-ticks
-  ; In this method you may start the tick counter.
+  reset-ticks
 end
 
-
-; --- Update desires ---
 to update-desires
-  ; You should update your agent's desires here.
-  ; Keep in mind that now you have more than one agent.
+  ask vacuums [
+    ifelse empty? beliefs
+      [set desire "roam"]
+      [set desire "suck"]
+  ]
 end
 
-
-; --- Update beliefs ---
 to update-beliefs
- ; You should update your agent's beliefs here.
  ; Please remember that you should use this method whenever your agents changes its position.
- ; Also note that this method should distinguish between two cases, namely updating beliefs based on 1) observed information and 2) received messages.
+ ask vacuums [
+   let my_color own_color
+   let new_beliefs [list pxcor pycor] of patches in-radius vision_radius with [pcolor = my_color]
+   set outgoing_messages [list pxcor pycor] of patches in-radius vision_radius with [member? pcolor color_list]
+   foreach new_beliefs [
+     if not member? ? beliefs [
+       set beliefs lput ? beliefs
+     ]
+   ]
+
+   foreach incoming_messages [
+     if not member? ? beliefs [
+       set beliefs lput ? beliefs
+     ]
+   ]
+ ]
 end
 
-
-; --- Update intentions ---
 to update-intentions
-  ; You should update your agent's intentions here.
+  ask vacuums [
+    if desire != "roam"
+    [
+      set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
+      set intention first beliefs
+    ]
+  ]
 end
 
-
-; --- Execute actions ---
 to execute-actions
-  ; Here you should put the code related to the actions performed by your agent: moving, cleaning, and (actively) looking around.
-  ; Please note that your agents should perform only one action per tick!
+  ; Here you should put the code related to the actions performed by your agent: moving and cleaning (and in Assignment 3.3, throwing away dirt).
+  ask vacuums [
+    ifelse desire != "roam" [
+      ifelse list round xcor round ycor = intention
+        [act-location]
+        [move-to-location first intention last intention]
+    ] [
+      ifelse can-move? 1
+        [forward 1]
+        [left random 360]
+    ]
+  ]
 end
 
+to act-location
+  set pcolor white
+  set beliefs remove-item 0 beliefs
+end
 
-; --- Send messages ---
+to move-to-location [ x y ]
+  facexy x y
+  forward 1
+end
+
+to-report distance-coords [coords]
+  report distancexy first coords last coords
+end
+
+to attach-vision-cone
+  hatch 1 [
+    set breed vision-cones
+    create-link-from myself [tie]
+    set shape "vision"
+    set color gray
+    set size vision_radius * 2
+  ]
+end
+
 to send-messages
-  ; Here should put the code related to sending messages to other agents.
-  ; Note that this could be seen as a special case of executing actions, but for conceptual clarity it has been put in a separate method.
+  ask vacuums [
+    foreach outgoing_messages [
+      let msg_color [pcolor] of  patch first ? last ?
+      if member? msg_color color_list [
+        let index position msg_color color_list
+        show msg_color
+        ask vacuum index [set incoming_messages lput ? incoming_messages]
+      ]
+    ]
+
+    set outgoing_messages []
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -799,6 +826,11 @@ true
 Polygon -2674135 true false 75 90 105 150 165 150 135 135 105 135 90 90 75 90
 Circle -2674135 true false 105 135 30
 Rectangle -2674135 true false 75 105 90 120
+
+vision
+true
+0
+Circle -7500403 false true 0 0 300
 
 wheel
 false
