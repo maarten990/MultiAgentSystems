@@ -81,6 +81,8 @@ to update-beliefs
        set beliefs lput ? beliefs
      ]
    ]
+
+   set incoming_messages []
  ]
 end
 
@@ -139,7 +141,6 @@ to send-messages
       let msg_color [pcolor] of  patch first ? last ?
       if member? msg_color color_list [
         let index position msg_color color_list
-        show msg_color
         ask vacuum index [set incoming_messages lput ? incoming_messages]
       ]
     ]
