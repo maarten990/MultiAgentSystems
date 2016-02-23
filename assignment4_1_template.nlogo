@@ -110,10 +110,10 @@ to execute-actions
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-786
-17
-1386
-638
+440
+12
+1040
+633
 12
 12
 23.6
@@ -139,7 +139,7 @@ ticks
 SLIDER
 9
 118
-775
+406
 151
 dirt_pct
 dirt_pct
@@ -152,10 +152,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-9
-86
-393
-119
+11
+80
+196
+113
 NIL
 go
 NIL
@@ -169,10 +169,10 @@ NIL
 1
 
 BUTTON
-392
-86
-775
-119
+219
+81
+368
+114
 NIL
 go
 T
@@ -188,7 +188,7 @@ NIL
 BUTTON
 9
 229
-775
+138
 262
 NIL
 setup
@@ -205,7 +205,7 @@ NIL
 SLIDER
 9
 155
-775
+407
 188
 num_agents
 num_agents
@@ -220,7 +220,7 @@ HORIZONTAL
 SLIDER
 8
 192
-775
+411
 225
 vision_radius
 vision_radius
@@ -235,7 +235,7 @@ HORIZONTAL
 MONITOR
 9
 349
-775
+130
 394
 Intention of vacuum 1
 [intention] of vacuum 0
@@ -246,7 +246,7 @@ Intention of vacuum 1
 MONITOR
 9
 393
-775
+109
 438
 Desire of vacuum 1
 [desire] of vacuum 0
@@ -257,7 +257,7 @@ Desire of vacuum 1
 MONITOR
 9
 305
-775
+118
 350
 Beliefs of vacuum 1
 [beliefs] of vacuum 0
@@ -266,10 +266,10 @@ Beliefs of vacuum 1
 11
 
 MONITOR
-10
-497
-776
-542
+150
+313
+262
+358
 Beliefs of vacuum 2
 [beliefs] of vacuum 1
 17
@@ -279,7 +279,7 @@ Beliefs of vacuum 2
 MONITOR
 9
 262
-775
+119
 307
 Color of vacuum 1
 [own_color] of vacuum 0
@@ -288,10 +288,10 @@ Color of vacuum 1
 11
 
 MONITOR
-10
-453
-776
-498
+149
+268
+246
+313
 Color of vacuum 2
 [own_color] of vacuum 1
 17
@@ -299,10 +299,10 @@ Color of vacuum 2
 11
 
 MONITOR
-10
-541
-776
-586
+149
+356
+273
+401
 Intention of vacuum 2
 [intention] of vacuum 1
 17
@@ -310,10 +310,10 @@ Intention of vacuum 2
 11
 
 MONITOR
-10
-585
-776
-630
+145
+402
+263
+447
 Desire of vacuum 2
 [desire] of vacuum 1
 17
@@ -321,10 +321,10 @@ Desire of vacuum 2
 11
 
 MONITOR
-11
-642
-777
-687
+309
+269
+416
+314
 Color of vacuum 3
 [own_color] of vacuum 2
 17
@@ -332,10 +332,10 @@ Color of vacuum 3
 11
 
 MONITOR
-11
-686
-777
-731
+302
+314
+413
+359
 Beliefs of vacuum 3
 [beliefs] of vacuum 2
 17
@@ -343,10 +343,10 @@ Beliefs of vacuum 3
 11
 
 MONITOR
-11
-730
-777
-775
+302
+358
+421
+403
 Intention of vacuum 3
 [intention] of vacuum 2
 17
@@ -354,10 +354,10 @@ Intention of vacuum 3
 11
 
 MONITOR
-11
-774
-777
-819
+298
+406
+419
+451
 Desire of vacuum 3
 [desire] of vacuum 2
 17
@@ -367,7 +367,7 @@ Desire of vacuum 3
 MONITOR
 9
 18
-775
+408
 63
 Time to complete the task.
 time
