@@ -112,6 +112,8 @@ to update-beliefs
         ]
      ]
    ]
+
+   set incoming_messages []
  ]
 end
 
