@@ -1,4 +1,4 @@
-globals [total_dirty time]
+globals [total_dirty time color_list]
 
 breed [vacuums vacuum]
 vacuums-own [beliefs desire intention own_color]
@@ -6,6 +6,8 @@ vacuums-own [beliefs desire intention own_color]
 to setup
   clear-all
   set time 0
+  set color_list [orange lime turquoise cyan sky violet magenta]
+
   setup-patches
   setup-vacuums
   setup-ticks
@@ -24,20 +26,23 @@ end
 to setup-patches
   ask patches [
     ifelse random 100 < dirt_pct
-    [set pcolor brown]
+    [
+      set pcolor item random num_agents color_list
+    ]
     [set pcolor white]
   ]
 
-  set total_dirty count patches with [pcolor = brown]
+  set total_dirty count patches with [pcolor != white]
 end
 
 to setup-vacuums
   create-vacuums num_agents [
     setxy 0 0
-    set color pink ;prolly need some color doing stuff
+    set color item who color_list
+    set own_color item who color_list
     set shape "sheep"
     set heading 90
-    set beliefs [list pxcor pycor] of patches with [pcolor = brown]
+    set beliefs [list pxcor pycor] of patches with [pcolor != white]
   ]
 end
 
@@ -55,15 +60,11 @@ end
 
 to update-beliefs
  ; Please remember that you should use this method whenever your agents changes its position.
+ in-radius
 end
 
 to update-intentions
   ask vacuums [
-    ifelse bag < capacity [
-      set beliefs sort-by [distance-coords ?1 < distance-coords ?2] beliefs
-      set intention first beliefs
-    ]
-    [set intention can]
   ]
 end
 
@@ -108,7 +109,7 @@ dirt_pct
 dirt_pct
 0
 100
-2
+19
 1
 1
 NIL
