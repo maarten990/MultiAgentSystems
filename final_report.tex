@@ -11,38 +11,52 @@
 
 \maketitle
 
-\section{Overall task of the agents}
-Leave the burning building
+\section{Description}
+Our goal is to simulate people escaping from a burning building. We create an environment with people and fire randomly distributed throughout the building. People randomly walk through the building until they spot fire, at which point they try to run towards the escape and alarm any others they meet along their way. The simulation ends when all people either escaped or died in a fire.
+
+\section{Agents}
+
+\subsection{Agent Description}
+The agents in this simulation are people trying to escape from the building while avoiding fire. In the BDI framework, they have:
+\begin{itemize}
+\item Beliefs: Layout of the building, locations of fire, location of exit, locations of other agents
+\item Desires: Roam (when no fire is spotted), Find exit, Escape, Alarm others
+\item Intentions: Move towards exit, Move away from fire, Move towards other agent, Alarm other agent
+\end{itemize}
+They have the following properties:
+\begin{itemize}
+\item Whether they are aware of fire.
+\item Whether they may/may not pass through eachother.
+\item Detection radius for fire.
+\item Communication radius to alarm other agents.
+\item Whether they prioritize helping other or escaping.
+\end{itemize}
+
+\subsection{Communication between Agents}
+When an agent spots fire, he becomes aware of the fire. Whenever they encounter another agent within their communication radius, they will inform them of all fire tiles they know.
+
+\section{The Environment}
+The environment is a grid of squares with either floor, wall, fire or exit tiles. There is always at least one exit available, and fire may spread to other tiles.
 
 \section{Research Questions}
-Look into flocking and traffic jam behaviour, and how to prevent it.
-Vary the spreading of the fire, prior knowledge on exit locations.
-
-\section{The environment}
-Office-like building with walls and one or more emergency exits.
-Also fire.
-
-\section{Communication}
-When an agent becomes aware of the fire, he yells about it in a certain radius.
-
-\section{Reasoning Process}
-Beliefs:
 \begin{itemize}
-  \item The locations of fire
-  \item The locations of exits
+\item Can we prevent traffic jam behaviour?
+\item How much do the following properties affect overall survival rate?
+\begin{itemize}
+\item Rate at which fire spreads
+\item Whether agents have prior knowledge of exit locations
+\item The ratio between agents that prioritize saving themselves over saving others
+\end{itemize}
 \end{itemize}
 
-Desires:
+\section{Basic Setup}
+The simplest form in which we can simulate this problem is with the following properties:
 \begin{itemize}
-  \item Stay away from fire
-  \item Leave building
+\item One exit, of which all agents know the location
+\item One randomly placed fire tile, which does not spread
+\item All agents have the same priority, i.e. escape rather than going out of their way to find others
+\item One simple wall between the agents and the exit, so they are forced to walk around it
 \end{itemize}
-
-Intentions:
-\begin{itemize}
-  \item Random walk (if there is no danger)
-  \item (find exit)
-  \item move away from danger
-\end{itemize}
+For next week's prototype, we aim to build this basic setup.
 
 \end{document}
