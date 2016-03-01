@@ -1,0 +1,48 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+
+\title{Building Evactuation}
+\author{Maarten de Jonge \\
+        Edwin Odijk \\
+        Roelof van der Heijden}
+
+\begin{document}
+
+\maketitle
+
+\section{Overall task of the agents}
+Leave the burning building
+
+\section{Research Questions}
+Look into flocking and traffic jam behaviour, and how to prevent it.
+Vary the spreading of the fire, prior knowledge on exit locations.
+
+\section{The environment}
+Office-like building with walls and one or more emergency exits.
+Also fire.
+
+\section{Communication}
+When an agent becomes aware of the fire, he yells about it in a certain radius.
+
+\section{Reasoning Process}
+Beliefs:
+\begin{itemize}
+  \item The locations of fire
+  \item The locations of exits
+\end{itemize}
+
+Desires:
+\begin{itemize}
+  \item Stay away from fire
+  \item Leave building
+\end{itemize}
+
+Intentions:
+\begin{itemize}
+  \item Random walk (if there is no danger)
+  \item (find exit)
+  \item move away from danger
+\end{itemize}
+
+\end{document}
