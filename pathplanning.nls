@@ -13,7 +13,7 @@ to-report neighbours [visited node]
   set next_nodes filter [first ? >= 0 and last ? >= 0
                          and first ? <= max-pxcor and last ? <= max-pycor
                          and [pcolor] of patch (first ?) (last ?) = white
-                         and count (turtles-on patch (first ?) (last ?)) = 0
+                         and not (any? turtles-on patch (first ?) (last ?))
                          and not (member? ? visited)] next_nodes
 
   report next_nodes
@@ -32,16 +32,28 @@ to-report path [parents node]
   report (reverse out)
 end
 
-; calculate a path (breadth first) from 'from' to 'goal'
+; return the manhattan distance from the node to the goal
+to-report heuristic [node goal]
+  report reduce + (map abs (map - goal node))
+end
+
+; calculate a path (A*) from 'from' to 'goal'
 to-report search_path [from goal]
   let queue (list from)
   let parents table:make
   let visited []
+  let path_lengths table:make
+  table:put path_lengths from 0
 
   while [not empty? queue]
   [
+    ; sort the queue by projected path length
+    set queue sort-by [(table:get path_lengths ?1) + (heuristic ?1 goal) <
+                       (table:get path_lengths ?2) + (heuristic ?2 goal)] queue
+    
     ; pop the front element of the queue
     let node (first queue)
+    ask patch (first node) (last node) [set pcolor blue - 10]
     set queue (but-first queue)
     set visited (lput node visited)
 
@@ -53,6 +65,7 @@ to-report search_path [from goal]
     [
       set queue (lput ? queue)
       table:put parents ? node
+      table:put path_lengths ? (table:get path_lengths node) + 1
     ]
   ]
 
