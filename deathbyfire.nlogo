@@ -11,51 +11,61 @@ to-report add_lists [x y]
   report (map + x y)
 end
 
-to-report neighbours [node]
+to-report neighbours [visited node]
+  ; look at the four squares adjacent to the node
   let offsets (list [1 0] [0 1] [-1 0] [0 -1])
   let next_nodes (map [add_lists node ?] offsets)
 
-  set next_nodes filter [first ? >= 0 and last ? >= 0] next_nodes
+  ; filter for nodes that fall within the area and haven't been visited yet
+  set next_nodes filter [first ? >= 0 and last ? >= 0 and not (member? ? visited)] next_nodes
 
   report next_nodes
 end
 
+; iterate backwards from the node to trace a path and reverse it
 to-report path [parents node]
   let out []
 
-  while [table:has-key? parents node] [
+  while [table:has-key? parents node]
+  [
     set out (lput node out)
-    set node table:get parents node
+    set node (table:get parents node)
   ]
 
-  report out
+  report (reverse out)
 end
 
+; calculate a path (breadth first) from 'from' to 'goal'
 to-report search_path [from goal]
   let queue (list from)
   let parents table:make
+  let visited []
 
   while [not empty? queue]
   [
+    ; pop the front element of the queue
     let node (first queue)
-    set queue (remove-item 0 queue)
+    set queue (but-first queue)
+    set visited (lput node visited)
 
     if node = goal
       [report path parents node]
 
-    foreach neighbours node
-      [set queue (lput ? queue)]
-    foreach neighbours node
-      [table:put parents ? node]
+    ; put all the neighbours at the end of the queue and set their parent to the current node
+    foreach (neighbours visited node)
+    [
+      set queue (lput ? queue)
+      table:put parents ? node
+    ]
   ]
 
   report false
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-342
+345
 10
-781
+784
 470
 16
 16
