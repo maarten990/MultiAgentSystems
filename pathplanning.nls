@@ -12,7 +12,8 @@ to-report neighbours [visited node]
   ; filter for nodes that fall within the area, aren't obstructed and haven't been visited yet
   set next_nodes filter [first ? >= 0 and last ? >= 0
                          and first ? <= max-pxcor and last ? <= max-pycor
-                         and [pcolor] of patch (first ?) (last ?) = white
+                         and not ([pcolor] of patch (first ?) (last ?) = red)
+                         and not ([pcolor] of patch (first ?) (last ?) = black)
                          and not (any? turtles-on patch (first ?) (last ?))
                          and not (member? ? visited)] next_nodes
 
@@ -71,7 +72,7 @@ to-report search_path [from goal]
     ]
   ]
 
-  report false
+  report []
 end
 
 to draw_path [from goal]

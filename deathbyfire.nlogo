@@ -160,6 +160,16 @@ to execute-actions
 
   if intention = "move-escape" [
     ; move according to pathing
+    let pth (search_path (list round pxcor round pycor) exit)
+
+    ifelse not empty? pth
+      [let target (first pth)
+       setxy (first target) (last target)]
+      [print "Route blocked!"]
+
+    ; remove the agent if it has reached the exit
+    if (list round pxcor round pycor) = exit
+      [die]
   ]
 end
 @#$#@#$#@
