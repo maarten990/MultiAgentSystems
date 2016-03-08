@@ -1,10 +1,12 @@
 __includes["pathplanning.nls"]
 
-globals [exit]
+globals [exit walls]
 
 breed [persons person]
-persons-own [beliefs desire intention]
-
+persons-own [b_walls b_fires b_exits desire intention]
+; beliefs: location of exit, walls, aware fires, (location of other agents)
+; desires: roam, help, escape, (find exit)
+; intention: move-roam, move-escape, alarm other
 
 to setup
   clear-all
@@ -16,27 +18,35 @@ end
 
 to go
   ask persons [
+    execute-actions
     update-beliefs
     update-desires
     update-intentions
-    execute-actions
   ]
   spread-fire
   tick
 end
 
 to setup-patches
+  ; make everything white
   ask patches [set pcolor white]
+
+  ; add a wall
   ask patches [
     if pycor = 10 and (pxcor >= 2 and pxcor <= 30)
     [set pcolor black]
   ]
 
+  ; set the walls variable
+  set walls get-walls
+
+  ; create fires
   foreach n-values num_fires [?] [
     ask patch random-xcor random-ycor [ set pcolor red] ; might overlap with exit
   ]
 
-  set exit list random-xcor random-ycor
+  ; create 1 exit not on fire
+  set exit list round random-xcor round random-ycor
   let c 0
   ask patch item 0 exit item 1 exit [ set c pcolor ]
   while [c = red]
@@ -45,16 +55,30 @@ to setup-patches
     ask patch item 0 exit item 1 exit [ set c pcolor ]
   ]
   ask patch item 0 exit item 1 exit [ set pcolor green]
+
+end
+
+to-report get-walls
+  let w []
+  ask patches [
+    if pcolor = black
+    [
+      set w lput self w
+    ]
+  ]
+  report w
 end
 
 to setup-persons
   create-persons num_persons [
-    setxy random-xcor random-ycor
-    set shape "person" ; or set shape 'square' 'circle' 'dot'
+    setxy round random-xcor round random-ycor
+    set shape "dot" ; or set shape 'square' 'circle' 'dot'
     set color blue
-    set beliefs []
-    set desire []
-    set intention []
+    set heading 90 * random 4
+    set b_walls walls
+    set b_fires []
+    set b_exits exit
+    set desire "roam"
   ]
 end
 
@@ -65,36 +89,88 @@ to spread-fire
         if random 100 < fire_spread_rate [
           set pcolor red
         ]
-
       ]
     ]
   ]
 end
 
 to update-beliefs
-
+  ; if fire spotted, add it to beliefs
+  let b b_fires
+  ask patches in-radius fire_vision [
+    if pcolor = red [
+      if not member? self b [
+        set b lput self b
+      ]
+    ]
+  ]
+  set b_fires b
 end
 
 to update-desires
-
+  ifelse empty? b_fires
+  [set desire "roam"]
+  [set desire "escape"]
 end
 
 to update-intentions
+  ; if desires is "escape" and other person spotted, set intention to alarm
+  ; else move
 
+
+  if desire = "escape"
+  [
+    ; check for other persons
+    ifelse any? persons in-radius person_vision
+    [
+      ifelse intention != "alarm"
+        [set intention "alarm"]
+        [set intention "move-escape"]
+    ]
+    [
+      set intention "move-escape"
+    ]
+  ]
+
+  if desire = "roam"
+  [
+    set intention "move-roam"
+  ]
 end
 
 to execute-actions
+  if intention = "move-roam" [
+    ; move randomly
+    ifelse not can-move? 1 or any? turtles-on patch-ahead 1 or [pcolor] of patch-ahead 1 = black or [pcolor] of patch-ahead 1 = red
+      ; obstacle encountered
+      [ifelse random 100 < 50
+        [left 90]
+        [right 90]]
+      [ifelse random 100 < 80
+        [forward 1]
+        [ifelse random 100 < 50
+          [left 90]
+          [right 90]]]
+  ]
 
+  if intention = "alarm" [
+    ; share knowledge over fire
+    show "ALARM@!"
+  ]
+
+  if intention = "move-escape" [
+    ; move according to pathing
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 345
 10
-784
-470
+685
+371
 -1
 -1
-13.0
+10.0
 1
 10
 1
@@ -140,7 +216,7 @@ num_persons
 num_persons
 1
 25
-10
+19
 1
 1
 NIL
@@ -202,7 +278,7 @@ fire_spread_rate
 fire_spread_rate
 0
 100
-2
+0
 1
 1
 NIL
@@ -215,6 +291,36 @@ SLIDER
 128
 num_fires
 num_fires
+0
+1000
+8
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+138
+368
+310
+401
+fire_vision
+fire_vision
+1
+10
+3
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+137
+414
+309
+447
+person_vision
+person_vision
 0
 10
 1
