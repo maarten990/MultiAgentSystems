@@ -9,8 +9,12 @@ to-report neighbours [visited node]
   let offsets (list [1 0] [0 1] [-1 0] [0 -1])
   let next_nodes (map [add_lists node ?] offsets)
 
-  ; filter for nodes that fall within the area and haven't been visited yet
-  set next_nodes filter [first ? >= 0 and last ? >= 0 and not (member? ? visited)] next_nodes
+  ; filter for nodes that fall within the area, aren't obstructed and haven't been visited yet
+  set next_nodes filter [first ? >= 0 and last ? >= 0
+                         and first ? <= max-pxcor and last ? <= max-pycor
+                         and [pcolor] of patch (first ?) (last ?) = white
+                         and count (turtles-on patch (first ?) (last ?)) = 0
+                         and not (member? ? visited)] next_nodes
 
   report next_nodes
 end
@@ -53,4 +57,16 @@ to-report search_path [from goal]
   ]
 
   report false
+end
+
+to draw_path [from goal]
+  let pth search_path from goal
+
+  foreach pth
+  [
+    ask patch (first ?) (last ?)
+    [
+      set pcolor blue
+    ]
+  ]
 end
