@@ -1,9 +1,91 @@
+globals [exit]
+
+breed [persons person]
+persons-own [beliefs desire intention]
+
+
 to setup
   clear-all
   reset-ticks
 
-  ask patches [set pcolor white]
+  setup-patches
+  setup-persons
 end
+
+to go
+  ask persons [
+    update-beliefs
+    update-desires
+    update-intentions
+    execute-actions
+  ]
+  spread-fire
+  tick
+end
+
+to setup-patches
+  ask patches [set pcolor white]
+  ask patches [
+    if pycor = 10 and (pxcor >= 2 and pxcor <= 30)
+    [set pcolor black]
+  ]
+
+  foreach n-values num_fires [?] [
+    ask patch random-xcor random-ycor [ set pcolor red] ; might overlap with exit
+  ]
+
+  set exit list random-xcor random-ycor
+  let c 0
+  ask patch item 0 exit item 1 exit [ set c pcolor ]
+  while [c = red]
+  [
+    set exit list random-xcor random-ycor
+    ask patch item 0 exit item 1 exit [ set c pcolor ]
+  ]
+  ask patch item 0 exit item 1 exit [ set pcolor green]
+end
+
+to setup-persons
+  create-persons num_persons [
+    setxy random-xcor random-ycor
+    set shape "person" ; or set shape 'square' 'circle' 'dot'
+    set color blue
+    set beliefs []
+    set desire []
+    set intention []
+  ]
+end
+
+to spread-fire
+  ask patches [
+    if pcolor = red [
+      ask neighbors4 [
+        if random 100 < fire_spread_rate [
+          set pcolor red
+        ]
+
+      ]
+    ]
+  ]
+end
+
+to update-beliefs
+
+end
+
+to update-desires
+
+end
+
+to update-intentions
+
+end
+
+to execute-actions
+
+end
+
+
 
 extensions [table]
 
@@ -67,8 +149,8 @@ GRAPHICS-WINDOW
 10
 784
 470
-16
-16
+-1
+-1
 13.0
 1
 10
@@ -79,10 +161,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--16
-16
--16
-16
+0
+32
+0
+32
 0
 0
 1
@@ -105,6 +187,98 @@ NIL
 NIL
 NIL
 1
+
+SLIDER
+130
+137
+302
+170
+num_persons
+num_persons
+1
+25
+10
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+119
+35
+182
+68
+NIL
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+SLIDER
+129
+199
+301
+232
+pct_walls
+pct_walls
+0
+100
+20
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+135
+263
+307
+296
+n_exits
+n_exits
+1
+10
+1
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+142
+316
+316
+349
+fire_spread_rate
+fire_spread_rate
+0
+100
+2
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+136
+95
+308
+128
+num_fires
+num_fires
+0
+10
+1
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
