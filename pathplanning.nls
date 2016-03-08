@@ -53,7 +53,6 @@ to-report search_path [from goal]
     
     ; pop the front element of the queue
     let node (first queue)
-    ask patch (first node) (last node) [set pcolor blue - 10]
     set queue (but-first queue)
     set visited (lput node visited)
 
@@ -63,9 +62,12 @@ to-report search_path [from goal]
     ; put all the neighbours at the end of the queue and set their parent to the current node
     foreach (neighbours visited node)
     [
-      set queue (lput ? queue)
-      table:put parents ? node
-      table:put path_lengths ? (table:get path_lengths node) + 1
+      if not (member? ? queue)
+      [
+        set queue (lput ? queue)
+        table:put parents ? node
+        table:put path_lengths ? (table:get path_lengths node) + 1
+      ]
     ]
   ]
 
