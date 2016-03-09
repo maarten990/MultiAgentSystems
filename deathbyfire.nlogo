@@ -3,7 +3,7 @@ __includes["pathplanning.nls"]
 globals [exit walls]
 
 breed [persons person]
-persons-own [b_walls b_fires b_exits desire intention]
+persons-own [b_walls b_fires b_exits desire intention escape_route]
 ; beliefs: location of exit, walls, aware fires, (location of other agents)
 ; desires: roam, help, escape, (find exit)
 ; intention: move-roam, move-escape, alarm other
@@ -79,6 +79,7 @@ to setup-persons
     set b_fires []
     set b_exits exit
     set desire "roam"
+    set escape_route []
   ]
 end
 
@@ -159,13 +160,23 @@ to execute-actions
   ]
 
   if intention = "move-escape" [
-    ; move according to pathing
-    let pth (search_path (list round pxcor round pycor) exit)
+    ; if there's no known escape route, calculate one
+    ; TODO: maybe make this a separate intention?
+    if empty? escape_route
+      [set escape_route (search_path (list round pxcor round pycor) exit)]
 
-    ifelse not empty? pth
-      [let target (first pth)
-       setxy (first target) (last target)]
-      [print "Route blocked!"]
+    ; if there's still no route, the path is blocked right now
+    if empty? escape_route
+      [stop]
+
+
+    let target (first escape_route)
+    set escape_route (but-first escape_route)
+
+    ; if the agent can follow the path, do it; otherwise clear the path
+    ifelse valid_node target
+      [setxy (first target) (last target)]
+      [set escape_route []]
 
     ; remove the agent if it has reached the exit
     if (list round pxcor round pycor) = exit

@@ -4,6 +4,12 @@ to-report add_lists [x y]
   report (map + x y)
 end
 
+to-report valid_node [node]
+  report not ([pcolor] of patch (first node) (last node) = red)
+         and not ([pcolor] of patch (first node) (last node) = black)
+         and not (any? turtles-on patch (first node) (last node))
+end
+
 to-report neighbours [visited node]
   ; look at the four squares adjacent to the node
   let offsets (list [1 0] [0 1] [-1 0] [0 -1])
@@ -12,9 +18,7 @@ to-report neighbours [visited node]
   ; filter for nodes that fall within the area, aren't obstructed and haven't been visited yet
   set next_nodes filter [first ? >= 0 and last ? >= 0
                          and first ? <= max-pxcor and last ? <= max-pycor
-                         and not ([pcolor] of patch (first ?) (last ?) = red)
-                         and not ([pcolor] of patch (first ?) (last ?) = black)
-                         and not (any? turtles-on patch (first ?) (last ?))
+                         and valid_node ?
                          and not (member? ? visited)] next_nodes
 
   report next_nodes
