@@ -31,11 +31,18 @@ to setup-patches
   ; make everything white
   ask patches [set pcolor white]
 
-  ; add a wall
+  ; add walls
   ask patches [
     if pycor = 10 and (pxcor >= 2 and pxcor <= 30)
+       or pycor = 30 and (pxcor >= 2 and pxcor <= 30)
+       or pxcor = 2 and (pycor >= 10 and pycor <= 30)
+       or pxcor = 30 and (pycor >= 10 and pycor <= 30)
     [set pcolor black]
   ]
+
+  ; add doors
+  ask patch 16 10 [set pcolor white]
+  ask patch 16 30 [set pcolor white]
 
   ; set the walls variable
   set walls get-walls
