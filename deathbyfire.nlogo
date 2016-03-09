@@ -191,7 +191,7 @@ to execute-actions
     ; if there's no known escape route, calculate one
     ; TODO: maybe make this a separate intention?
     if empty? escape_route
-      [set escape_route (search_path (list round pxcor round pycor) exit)]
+      [set escape_route (search_path (list round pxcor round pycor) b_exits)]
 
     ; if there's still no route, the path is blocked right now
     if empty? escape_route

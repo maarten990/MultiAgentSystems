@@ -5,9 +5,11 @@ to-report add_lists [x y]
 end
 
 to-report valid_node [node]
-  report not ([pcolor] of patch (first node) (last node) = red)
-         and not ([pcolor] of patch (first node) (last node) = black)
-         and not (any? turtles-on patch (first node) (last node))
+  let node_patch (patch (first node) (last node))
+
+  report not member? node_patch b_walls
+         and not member? node_patch b_fires
+         and not (any? turtles-on patch (first node) (last node)) ; TODO: add beliefs about agent locations?
 end
 
 to-report neighbours [visited node]
