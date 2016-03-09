@@ -134,17 +134,17 @@ to update-intentions
     [
       ; switch between alarming and moving to prevent alarm-lock
       ifelse intention != "alarm"
-        [set intention "alarm"]
-        [set intention "move-escape"]
+        [set intention task [alarm]]
+        [set intention task [move-escape]]
     ]
     [
-      set intention "move-escape"
+      set intention task [move-escape]
     ]
   ]
 
   if desire = "roam"
   [
-    set intention "move-roam"
+    set intention task [move-roam]
   ]
 end
 
@@ -160,56 +160,59 @@ to execute-actions
     die
   ]
 
-  if intention = "move-roam" [
-    ; move randomly
-    ifelse not can-move? 1 or any? turtles-on patch-ahead 1 or [pcolor] of patch-ahead 1 = black or [pcolor] of patch-ahead 1 = red
-      ; obstacle encountered
+  if not (intention = 0)
+    [run intention]
+end
+
+to move-roam
+  ; move randomly
+  ifelse not can-move? 1 or any? turtles-on patch-ahead 1 or [pcolor] of patch-ahead 1 = black or [pcolor] of patch-ahead 1 = red
+    ; obstacle encountered
+    [ifelse random 100 < 50
+      [left 90]
+      [right 90]]
+    [ifelse random 100 < 80
+      [forward 1]
       [ifelse random 100 < 50
         [left 90]
-        [right 90]]
-      [ifelse random 100 < 80
-        [forward 1]
-        [ifelse random 100 < 50
-          [left 90]
-          [right 90]]]
-  ]
+        [right 90]]]
+end
 
-  if intention = "alarm" [
-    ; share knowledge over fire
-    let b b_fires
-    ask persons in-radius person_vision [
-      foreach b [
-        if not member? ? b_fires [
-          set b_fires lput ? b_fires
-        ]
+to alarm
+  ; share knowledge over fire
+  let b b_fires
+  ask persons in-radius person_vision [
+    foreach b [
+      if not member? ? b_fires [
+        set b_fires lput ? b_fires
       ]
-      set b_fires b
     ]
+    set b_fires b
   ]
+end
 
-  if intention = "move-escape" [
-    ; if there's no known escape route, calculate one
-    ; TODO: maybe make this a separate intention?
-    if empty? escape_route
-      [set escape_route (search_path (list round pxcor round pycor) b_exits)]
+to move-escape
+  ; if there's no known escape route, calculate one
+  ; TODO: maybe make this a separate intention?
+  if empty? escape_route
+    [set escape_route (search_path (list round pxcor round pycor) b_exits)]
 
-    ; if there's still no route, the path is blocked right now
-    if empty? escape_route
-      [stop]
+  ; if there's still no route, the path is blocked right now
+  if empty? escape_route
+    [stop]
 
 
-    let target (first escape_route)
-    set escape_route (but-first escape_route)
+  let target (first escape_route)
+  set escape_route (but-first escape_route)
 
-    ; if the agent can follow the path, do it; otherwise clear the path
-    ifelse valid_node target
-      [setxy (first target) (last target)]
-      [set escape_route []]
+  ; if the agent can follow the path, do it; otherwise clear the path
+  ifelse valid_node target
+    [setxy (first target) (last target)]
+    [set escape_route []]
 
-    ; remove the agent if it has reached the exit
-    if (list round pxcor round pycor) = exit
-      [die]
-  ]
+  ; remove the agent if it has reached the exit
+  if (list round pxcor round pycor) = exit
+    [die]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -265,7 +268,7 @@ num_persons
 num_persons
 1
 25
-10
+25
 1
 1
 NIL
@@ -327,7 +330,7 @@ fire_spread_rate
 fire_spread_rate
 0
 100
-5
+1
 1
 1
 NIL
