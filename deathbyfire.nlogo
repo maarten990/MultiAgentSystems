@@ -131,6 +131,7 @@ to update-intentions
     ; check for other persons
     ifelse any? persons in-radius person_vision
     [
+      ; switch between alarming and moving to prevent alarm-lock
       ifelse intention != "alarm"
         [set intention "alarm"]
         [set intention "move-escape"]
@@ -147,6 +148,16 @@ to update-intentions
 end
 
 to execute-actions
+  ; check if the current patch is on fire
+  let c 0
+  ask patch-here [
+    set c pcolor
+  ]
+  ; if the current patch is on fire, then DIE!
+  if c = red [
+    die
+  ]
+
   if intention = "move-roam" [
     ; move randomly
     ifelse not can-move? 1 or any? turtles-on patch-ahead 1 or [pcolor] of patch-ahead 1 = black or [pcolor] of patch-ahead 1 = red
@@ -244,7 +255,7 @@ num_persons
 num_persons
 1
 25
-19
+10
 1
 1
 NIL
@@ -306,7 +317,7 @@ fire_spread_rate
 fire_spread_rate
 0
 100
-0
+10
 1
 1
 NIL
@@ -321,7 +332,7 @@ num_fires
 num_fires
 0
 1000
-8
+1
 1
 1
 NIL
@@ -336,7 +347,7 @@ fire_vision
 fire_vision
 1
 10
-3
+1
 1
 1
 NIL
@@ -351,7 +362,7 @@ person_vision
 person_vision
 0
 10
-1
+3
 1
 1
 NIL
