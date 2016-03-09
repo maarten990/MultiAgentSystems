@@ -134,17 +134,17 @@ to update-intentions
     [
       ; switch between alarming and moving to prevent alarm-lock
       ifelse intention != "alarm"
-        [set intention task [alarm]]
-        [set intention task [move-escape]]
+        [set intention "alarm"]
+        [set intention "move-escape"]
     ]
     [
-      set intention task [move-escape]
+      set intention "move-escape"
     ]
   ]
 
   if desire = "roam"
   [
-    set intention task [move-roam]
+    set intention "move-roam"
   ]
 end
 
@@ -160,8 +160,14 @@ to execute-actions
     die
   ]
 
-  if not (intention = 0)
-    [run intention]
+  if intention = "move-roam"
+    [move-roam]
+
+  if intention = "alarm"
+    [alarm]
+
+  if intention = "move-escape"
+    [move-escape]
 end
 
 to move-roam
