@@ -94,6 +94,7 @@ to spread-fire
   ask patches [
     if pcolor = red [
       ask neighbors4 [
+        ; should fires burn the exit?
         if random 100 < fire_spread_rate [
           set pcolor red
         ]
@@ -155,6 +156,7 @@ to execute-actions
   ]
   ; if the current patch is on fire, then DIE!
   if c = red [
+    show "I dieded! :("
     die
   ]
 
@@ -174,7 +176,15 @@ to execute-actions
 
   if intention = "alarm" [
     ; share knowledge over fire
-    show "ALARM@!"
+    let b b_fires
+    ask persons in-radius person_vision [
+      foreach b [
+        if not member? ? b_fires [
+          set b_fires lput ? b_fires
+        ]
+      ]
+      set b_fires b
+    ]
   ]
 
   if intention = "move-escape" [
@@ -317,7 +327,7 @@ fire_spread_rate
 fire_spread_rate
 0
 100
-10
+5
 1
 1
 NIL
@@ -332,7 +342,7 @@ num_fires
 num_fires
 0
 1000
-1
+4
 1
 1
 NIL
@@ -347,7 +357,7 @@ fire_vision
 fire_vision
 1
 10
-1
+3
 1
 1
 NIL
