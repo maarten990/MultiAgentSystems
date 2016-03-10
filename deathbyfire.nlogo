@@ -17,14 +17,16 @@ to setup
 end
 
 to go
-  ask persons [
-    execute-actions
-    update-beliefs
-    update-desires
-    update-intentions
+  every 0.1 [
+    ask persons [
+      execute-actions
+      update-beliefs
+      update-desires
+      update-intentions
+    ]
+    spread-fire
+    tick
   ]
-  spread-fire
-  tick
 end
 
 to setup-patches
