@@ -17,16 +17,20 @@ to setup
 end
 
 to go
-  every 0.1 [
-    ask persons [
-      execute-actions
-      update-beliefs
-      update-desires
-      update-intentions
-    ]
-    spread-fire
-    tick
+  ifelse throttle_speed
+  [every 0.1 [step]]
+  [step]
+end
+
+to step
+  ask persons [
+    execute-actions
+    update-beliefs
+    update-desires
+    update-intentions
   ]
+  spread-fire
+  tick
 end
 
 to setup-patches
@@ -388,6 +392,17 @@ person_vision
 1
 NIL
 HORIZONTAL
+
+SWITCH
+4
+94
+131
+127
+throttle_speed
+throttle_speed
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
