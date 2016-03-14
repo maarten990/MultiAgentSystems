@@ -16,6 +16,23 @@ to setup
   setup-persons
 end
 
+to draw_walls
+  if mouse-down? [
+    ask patch mouse-xcor mouse-ycor [set pcolor black]
+  ]
+end
+
+to save_walls
+  let drawn_walls [(list pxcor pycor)] of patches with [pcolor = black]
+  file-open "walls.txt"
+  file-print drawn_walls
+  file-close
+end
+
+to clear_walls
+  file-delete "walls.txt"
+end
+
 to go
   ifelse throttle_speed
   [every 0.1 [step]]
@@ -38,17 +55,15 @@ to setup-patches
   ask patches [set pcolor white]
 
   ; add walls
-  ask patches [
-    if pycor = 10 and (pxcor >= 2 and pxcor <= 30)
-       or pycor = 30 and (pxcor >= 2 and pxcor <= 30)
-       or pxcor = 2 and (pycor >= 10 and pycor <= 30)
-       or pxcor = 30 and (pycor >= 10 and pycor <= 30)
-    [set pcolor black]
+  if file-exists? "walls.txt" [
+    file-open "walls.txt"
+    let drawn_walls file-read
+    ask patches [
+      if member? (list pxcor pycor) drawn_walls
+      [set pcolor black]
+    ]
+    file-close
   ]
-
-  ; add doors
-  ask patch 16 10 [set pcolor white]
-  ask patch 16 30 [set pcolor white]
 
   ; set the walls variable
   set walls get-walls
@@ -403,6 +418,57 @@ throttle_speed
 0
 1
 -1000
+
+BUTTON
+690
+10
+788
+43
+NIL
+draw_walls
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+695
+59
+791
+92
+NIL
+save_walls\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+703
+101
+801
+134
+NIL
+clear_walls\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
