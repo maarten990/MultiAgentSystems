@@ -222,6 +222,10 @@ to alarm
 end
 
 to move-escape
+  ; remove the agent if it has reached the exit
+  if (list round pxcor round pycor) = exit
+    [die]
+
   ; if there's no known escape route, calculate one
   ; TODO: maybe make this a separate intention?
   if empty? escape_route
@@ -231,7 +235,6 @@ to move-escape
   if empty? escape_route
     [stop]
 
-
   let target (first escape_route)
   set escape_route (but-first escape_route)
 
@@ -239,10 +242,6 @@ to move-escape
   ifelse movable_node target
     [setxy (first target) (last target)]
     [set escape_route []]
-
-  ; remove the agent if it has reached the exit
-  if (list round pxcor round pycor) = exit
-    [die]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -418,7 +417,7 @@ SWITCH
 127
 throttle_speed
 throttle_speed
-1
+0
 1
 -1000
 
