@@ -100,6 +100,9 @@ end
 to setup-persons
   create-persons num_persons [
     setxy round random-xcor round random-ycor
+    while [pcolor != white]
+      [setxy round random-xcor round random-ycor]
+
     set shape "dot" ; or set shape 'square' 'circle' 'dot'
     set color blue
     set heading 90 * random 4
