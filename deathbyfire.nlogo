@@ -77,7 +77,7 @@ to setup-patches
   set exit list round random-xcor round random-ycor
   let c 0
   ask patch item 0 exit item 1 exit [ set c pcolor ]
-  while [c = red]
+  while [c != white]
   [
     set exit list random-xcor random-ycor
     ask patch item 0 exit item 1 exit [ set c pcolor ]
@@ -119,9 +119,18 @@ to spread-fire
     if pcolor = red [
       ask neighbors4 [
         ; should fires burn the exit?
-        if random 100 < fire_spread_rate [
-          set pcolor red
+        ifelse pcolor = black
+        [
+          if random 1000 < 0.1 * fire_spread_rate [
+            set pcolor red
+          ]
         ]
+        [
+          if random 1000 < fire_spread_rate [
+            set pcolor red
+          ]
+        ]
+
       ]
     ]
   ]
@@ -359,7 +368,7 @@ fire_spread_rate
 fire_spread_rate
 0
 100
-1
+20
 1
 1
 NIL
