@@ -4,12 +4,19 @@ to-report add_lists [x y]
   report (map + x y)
 end
 
-to-report valid_node [node]
+to-report movable_node [node]
   let node_patch (patch (first node) (last node))
 
   report not member? node_patch b_walls
          and not member? node_patch b_fires
          and not (any? turtles-on patch (first node) (last node)) ; TODO: add beliefs about agent locations?
+end
+
+to-report pathable_node [node]
+  let node_patch (patch (first node) (last node))
+
+  report not member? node_patch b_walls
+         and not member? node_patch b_fires
 end
 
 to-report neighbours [visited node]
@@ -20,7 +27,7 @@ to-report neighbours [visited node]
   ; filter for nodes that fall within the area, aren't obstructed and haven't been visited yet
   set next_nodes filter [first ? >= 0 and last ? >= 0
                          and first ? <= max-pxcor and last ? <= max-pycor
-                         and valid_node ?
+                         and pathable_node ?
                          and not (member? ? visited)] next_nodes
 
   report next_nodes

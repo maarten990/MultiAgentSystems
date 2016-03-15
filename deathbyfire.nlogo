@@ -233,7 +233,7 @@ to move-escape
   set escape_route (but-first escape_route)
 
   ; if the agent can follow the path, do it; otherwise clear the path
-  ifelse valid_node target
+  ifelse movable_node target
     [setxy (first target) (last target)]
     [set escape_route []]
 
@@ -415,7 +415,7 @@ SWITCH
 127
 throttle_speed
 throttle_speed
-0
+1
 1
 -1000
 
