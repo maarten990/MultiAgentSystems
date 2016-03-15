@@ -1,6 +1,8 @@
 \documentclass[a4paper]{article}
 \usepackage[english]{babel}
 \usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{placeins}
 
 \title{Building Evacuation}
 \author{Maarten de Jonge \\
@@ -15,11 +17,24 @@
 In this report we simulate people escaping from a burning building using the BDI framework. We create an environment with people and fire randomly distributed throughout the building. People randomly walk through the building until they spot fire, at which point they try to run towards the escape and alarm any others they meet along their way. The simulation ends when all people either escaped or died in a fire.
 Using this simulation, we aim to find what affects the speed and survival rate of such an evacuation.
 
-\section{Method}
-%stuff here?
+\section{Environment}
+\FloatBarrier
+The simulation environment is a 33x33 grid, representing an office space (Figure
+\ref{fig:office}). The walls (black tiles) were hand-drawn to craft a somewhat
+realistic layout of rooms and hallways. One exit (green tile) is placed
+randomly, as well as a variable number of initial fires (red tiles). Care is
+taken to ensure the exit is reachable, i.e. it is not inside a wall or on fire.
 
-\subsection{Environment}
-The environment is a grid of squares with either floor, wall, fire or exit tiles. There is always at least one exit available, and fire may spread to other tiles. To ensure a level of consistency across tests, we use several preset wall layouts.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\textwidth]{office.png}
+  \label{fig:office}
+  \caption{The office layout, with random fires and exit}
+\end{figure}
+
+A variable amount of people (ranging from 1 to 25) is spawned, again making sure
+not to doom them by spawning them inside walls or fires. At each tick of the
+simulation, 
 
 \subsection{Agents}
 The agents in this simulation are people trying to escape from the building while avoiding fire. In the BDI framework, they have:
@@ -39,6 +54,7 @@ Agents have the following properties:
 
 When an agent spots fire, he becomes aware of the fire. Whenever they encounter another agent within their communication radius, they will inform them of all fire tiles they know.
 
+\FloatBarrier
 \section{Experiments}
 \begin{itemize}
 \item Can we prevent traffic jam behaviour?
@@ -49,16 +65,6 @@ When an agent spots fire, he becomes aware of the fire. Whenever they encounter 
 \item The ratio between agents that prioritize saving themselves over saving others
 \end{itemize}
 \end{itemize}
-
-\subsection{Basic Setup}
-The simplest form in which we can simulate this problem is with the following properties:
-\begin{itemize}
-\item One exit, of which all agents know the location
-\item One randomly placed fire tile, which does not spread
-\item All agents have the same priority, i.e. escape rather than going out of their way to find others
-\item One simple wall between the agents and the exit, so they are forced to walk around it
-\end{itemize}
-For next week's prototype, we aim to build this basic setup.
 
 \section{Results}
 
