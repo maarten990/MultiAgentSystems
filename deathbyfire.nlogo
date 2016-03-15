@@ -1,6 +1,6 @@
 __includes["pathplanning.nls"]
 
-globals [exit walls]
+globals [exit walls deaths escapes]
 
 breed [persons person]
 persons-own [b_walls b_fires b_exits desire intention escape_route]
@@ -8,9 +8,34 @@ persons-own [b_walls b_fires b_exits desire intention escape_route]
 ; desires: roam, help, escape, (find exit)
 ; intention: move-roam, move-escape, alarm other
 
+
+to gather_data [n]
+  let data []
+  foreach n-values n [?] [
+    print ?
+    setup
+    forever-step
+    set data (lput (list deaths escapes) data)
+    file-open "data.txt"
+    file-print data
+    file-close
+  ]
+end
+
+to forever-step
+  loop [
+    step
+    if not any? turtles
+    [stop]
+  ]
+end
+
 to setup
   clear-all
   reset-ticks
+
+  set deaths []
+  set escapes []
 
   setup-patches
   setup-persons
@@ -37,6 +62,9 @@ to go
   ifelse throttle_speed
   [every 0.1 [step]]
   [step]
+
+  if not any? turtles
+  [stop]
 end
 
 to step
@@ -189,7 +217,7 @@ to execute-actions
   ]
   ; if the current patch is on fire, then DIE!
   if c = red [
-    show "I dieded! :("
+    set deaths lput ticks deaths
     die
   ]
 
@@ -233,7 +261,8 @@ end
 to move-escape
   ; remove the agent if it has reached the exit
   if (list round pxcor round pycor) = exit
-    [die]
+  [set escapes (lput ticks escapes)
+   die]
 
   ; if there's no known escape route, calculate one
   ; TODO: maybe make this a separate intention?
@@ -426,7 +455,7 @@ SWITCH
 127
 throttle_speed
 throttle_speed
-0
+1
 1
 -1000
 
@@ -480,6 +509,42 @@ NIL
 NIL
 NIL
 1
+
+PLOT
+748
+200
+948
+350
+Escapees
+time
+# escapees
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "if is-list? escapes [plot length escapes]"
+
+PLOT
+750
+377
+950
+527
+Deaths
+time
+# deaths
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "if is-list? deaths [plot length deaths]"
 
 @#$#@#$#@
 ## WHAT IS IT?
