@@ -3,6 +3,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{placeins}
+\usepackage{booktabs}
 
 \title{Building Evacuation}
 \author{Maarten de Jonge \\
@@ -40,22 +41,28 @@ not to doom them by spawning them inside walls or fires. At each tick of the
 simulation, 
 
 \subsection{Agents}
-The agents in this simulation are people trying to escape from the building while avoiding fire. In the BDI framework, they have:
-\begin{itemize}
-\item Beliefs: Layout of the building, locations of fire, location of exit, locations of other agents
-\item Desires: Roam (when no fire is spotted), Find exit, Escape, Alarm others
-\item Intentions: Move towards exit, Move away from fire, Move towards other agent, Alarm other agent
-\end{itemize}
-Agents have the following properties:
-\begin{itemize}
-\item Whether they are aware of fire.
-\item Whether they may/may not pass through eachother.
-\item Detection radius for fire.
-\item Communication radius to alarm other agents.
-\item Whether they prioritize helping other or escaping.
-\end{itemize}
+The agents represent people trying to escape the burning building.
+Following the BDI framework, the agents possess the beliefs, desires and
+intentions described in Table \ref{tbl:bdi}.
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    Beliefs & Desires & Intentions \\
+    \midrule
+    Locations of walls & Roam around & Move towards exit \\
+    Locations of fire & Escape & Alarm other agents of fire \\
+    Location of exit & & Roam around \\
+    \bottomrule
+  \end{tabular}
+  \caption{Agents in the BDI framework}
+  \label{tbl:bdi}
+\end{table}
 
-When an agent spots fire, he becomes aware of the fire. Whenever they encounter another agent within their communication radius, they will inform them of all fire tiles they know.
+Additionally, each agent has a variable vision radius for both detecting fire
+and detecting people to alarm.
+
+TODO: detail the flow of desires and intentions
 
 \subsection{NetLogo Controls}
 To provide more insight in the workings of this simulation, we provide a overview below of the controls implemented in NetLogo, as not all of them may be self-explanatory.
