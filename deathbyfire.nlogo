@@ -1,4 +1,5 @@
 __includes["pathplanning.nls"]
+extensions [profiler]
 
 globals [exit walls deaths escapes]
 
@@ -8,6 +9,14 @@ persons-own [b_walls b_fires b_exits desire intention escape_route]
 ; desires: roam, help, escape, (find exit)
 ; intention: move-roam, move-escape, alarm other
 
+to profile
+  setup
+  profiler:start
+  repeat 20 [go]
+  profiler:stop
+  print profiler:report
+  profiler:reset
+end
 
 to gather_data [n]
   let data []
@@ -191,7 +200,7 @@ to update-intentions
   if desire = "escape"
   [
     ; check for other persons
-    ifelse any? persons in-radius person_vision
+    ifelse count (persons in-radius person_vision) > 1
     [
       ; switch between alarming and moving to prevent alarm-lock
       ifelse intention != "alarm"
@@ -249,9 +258,11 @@ to alarm
   ; share knowledge over fire
   let b b_fires
   ask persons in-radius person_vision [
-    foreach b [
-      if not member? ? b_fires [
-        set b_fires lput ? b_fires
+    if not (myself = self) [
+      foreach b [
+        if not member? ? b_fires [
+          set b_fires lput ? b_fires
+        ]
       ]
     ]
     set b_fires b
