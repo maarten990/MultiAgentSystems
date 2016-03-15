@@ -12,8 +12,11 @@
 \maketitle
 
 \section{Introduction}
-In this report we simulate people escaping from a burning building using the BDI framework. We create an environment with people and fire randomly distributed throughout the building. People randomly walk through the building until they spot fire, at which point they try to run towards the escape and alarm any others they meet along their way. The simulation ends when all people either escaped or died in a fire.
+In this report we simulate people escaping from a burning building using the BDI framework in NetLogo. We create an environment with people and fire randomly distributed throughout the building. People randomly walk through the building until they spot fire, at which point they try to run towards the escape and alarm any others they meet along their way. The simulation ends when all people either escaped or died in a fire.
+
 Using this simulation, we aim to find what affects the speed and survival rate of such an evacuation.
+
+Additionally, we describe the NetLogo implementation, explaining the functions of buttons and how they are implemented.
 
 \section{Method}
 %stuff here?
@@ -38,6 +41,23 @@ Agents have the following properties:
 \end{itemize}
 
 When an agent spots fire, he becomes aware of the fire. Whenever they encounter another agent within their communication radius, they will inform them of all fire tiles they know.
+
+\subsection{NetLogo Controls}
+To provide more insight in the workings of this simulation, we provide a overview below of the controls implemented in NetLogo, as not all of them may be self-explanatory.
+
+\subsubsection{Draw, Save and Clear walls}
+Walls used by the simulation are handdrawn and saved in a separate txt file. Upon running Setup, the file is read to redraw the walls.
+
+To use the function, first ensure that Setup is run at least once. If walls are already present, you can click clear\_walls (thereby removing the txt file) and run Setup again to redraw the environment with an empty sheet. Clicking draw\_walls allows you to start drawing with the environment. When you are finished, click draw\_walls again to stop drawing, then click save\_walls to save the new environment, which will now be redrawn every time Setup is run.
+
+\subsubsection{Throttle Speed}
+As the simulation may slow down at times, it may be preferrable to watch the simulation at a constant speed. Turning throttle\_speed on slows all steps to an equal speed of 100 milliseconds. This does mean that the overall speed of the simulation is slowed down, however, so this should be off when swift simulations are desired.
+
+\subsubsection{Fire Spread Rate}
+Controls the speed at which fire spreads. At every step, fire may spread to each neighbouring tile with a probability defined by fire\_spread\_rate in promille for each of these tiles.
+
+\subsubsection{Vision}
+The properties fire\_vision and person\_vision control the vision in which each agent can observe nearby fire or other agents respectively. This vision is represented by an invisible circle around the agent, with a radius equal to the value defined on the slider.
 
 \section{Experiments}
 \begin{itemize}
