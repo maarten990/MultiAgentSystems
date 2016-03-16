@@ -111,12 +111,12 @@ to setup-patches
   ]
 
   ; create 1 exit not on fire
-  set exit list round random-xcor round random-ycor
+  set exit (list round random-xcor round random-ycor)
   let c 0
   ask patch item 0 exit item 1 exit [ set c pcolor ]
   while [c != white]
   [
-    set exit list random-xcor random-ycor
+    set exit (list round random-xcor round random-ycor)
     ask patch item 0 exit item 1 exit [ set c pcolor ]
   ]
   ask patch item 0 exit item 1 exit [ set pcolor green]
