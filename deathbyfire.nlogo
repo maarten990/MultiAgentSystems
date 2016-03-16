@@ -25,10 +25,11 @@ to gather_data [n]
     setup
     forever-step
     set data (lput (list deaths escapes) data)
-    file-open "data.txt"
-    file-print data
-    file-close
   ]
+
+  file-open "data.txt"
+  file-print data
+  file-close
 end
 
 to forever-step
