@@ -1,5 +1,5 @@
 __includes["pathplanning.nls"]
-extensions [profiler]
+extensions [profiler table]
 
 globals [exit walls deaths escapes]
 
@@ -179,7 +179,7 @@ to update-beliefs
   ask patches in-radius fire_vision [
     if pcolor = red [
       if not member? self b [
-        set b lput self b
+        set b lput (list pxcor pycor) b
       ]
     ]
   ]
@@ -200,7 +200,7 @@ to update-intentions
   if desire = "escape"
   [
     ; check for other persons
-    ifelse count (persons in-radius person_vision) > 1
+    ifelse any? (other persons in-radius person_vision)
     [
       ; switch between alarming and moving to prevent alarm-lock
       ifelse intention != "alarm"
@@ -257,16 +257,19 @@ end
 to alarm
   ; share knowledge over fire
   let b b_fires
-  ask persons in-radius person_vision [
-    if not (myself = self) [
-      foreach b [
-        if not member? ? b_fires [
-          set b_fires lput ? b_fires
-        ]
-      ]
-    ]
-    set b_fires b
+  ask other persons in-radius person_vision [
+    let merged (merge-lists b b_fires)
+    set b_fires merged
+    ask myself [set b_fires merged]
   ]
+end
+
+to-report merge-lists [x y]
+  let hash table:make
+  foreach x [table:put hash ? 1]
+  foreach y [table:put hash ? 1]
+
+  report table:keys hash
 end
 
 to move-escape

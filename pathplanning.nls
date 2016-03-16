@@ -8,7 +8,7 @@ to-report movable_node [node]
   let node_patch (patch (first node) (last node))
 
   report not member? node_patch b_walls
-         and not member? node_patch b_fires
+         and not member? node b_fires
          and not (any? turtles-on patch (first node) (last node)) ; TODO: add beliefs about agent locations?
 end
 
@@ -16,7 +16,7 @@ to-report pathable_node [node]
   let node_patch (patch (first node) (last node))
 
   report not member? node_patch b_walls
-         and not member? node_patch b_fires
+         and not member? node b_fires
 end
 
 to-report neighbours [visited node]
