@@ -1,5 +1,5 @@
 __includes["pathplanning.nls"]
-extensions [profiler table]
+extensions [table]
 
 globals [exit walls deaths escapes]
 
@@ -8,15 +8,6 @@ persons-own [b_walls b_fires b_exits desire intention escape_route]
 ; beliefs: location of exit, walls, aware fires, (location of other agents)
 ; desires: roam, help, escape, (find exit)
 ; intention: move-roam, move-escape, alarm other
-
-to profile
-  setup
-  profiler:start
-  repeat 20 [go]
-  profiler:stop
-  print profiler:report
-  profiler:reset
-end
 
 to gather_data [n]
   let data []
