@@ -9,10 +9,34 @@ persons-own [b_walls b_fires b_exits desire intention escape_route]
 ; desires: roam, help, escape, (find exit)
 ; intention: move-roam, move-escape, alarm other
 
-to gather_data [n]
+to run-tests
+  let params table:make
+  table:put params "num_fires" (list 1 5)
+  table:put params "fire_spread_rate" (list 1 20)
+
+  gather_data params 2
+end
+
+to-report parse-args [params n]
+  let queries []
+  foreach (table:keys params) [
+    let query (word "set " ? " " (item n (table:get params ?)))
+    set queries (lput query queries)
+  ]
+
+  report queries
+end
+
+to gather_data [params n]
   let data []
   foreach n-values n [?] [
-    print ?
+    print (word "Iteration " ?)
+
+    foreach (parse-args params ?) [
+      print ?
+      run ?
+    ]
+
     setup
     forever-step
     set data (lput (list deaths escapes) data)
@@ -418,7 +442,7 @@ num_fires
 num_fires
 0
 1000
-4
+5
 1
 1
 NIL
