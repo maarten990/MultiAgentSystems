@@ -2,8 +2,10 @@
 \usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage[justification=centering]{subcaption}
 \usepackage{placeins}
 \usepackage{booktabs}
+\usepackage{tikz}
 
 \title{Building Evacuation}
 \author{Maarten de Jonge \\
@@ -43,16 +45,17 @@ simulation,
 \subsection{Agents}
 The agents represent people trying to escape the burning building.
 Following the BDI framework, the agents possess the beliefs, desires and
-intentions described in Table \ref{tbl:bdi}.
+intentions described in Table~\ref{tbl:bdi}.
 \begin{table}[h!]
   \centering
   \begin{tabular}{lll}
     \toprule
     Beliefs & Desires & Intentions \\
     \midrule
-    Locations of walls & Roam around & Move towards exit \\
-    Locations of fire & Escape & Alarm other agents of fire \\
-    Location of exit & & Roam around \\
+    Locations of walls & Roam & Roam around \\
+    Locations of fire & Escape & Panicked \\
+    Location of exit &  & Move towards exit \\
+    & & Alarm other agents of fire \\
     \bottomrule
   \end{tabular}
   \caption{Agents in the BDI framework}
@@ -63,6 +66,52 @@ Additionally, each agent has a variable vision radius for both detecting fire
 and detecting people to alarm.
 
 TODO: detail the flow of desires and intentions
+\subsubsection{Agent Beliefs}
+There are three concept that comprise an agents belief state: the location of walls, location of fire and the location of the exit. Both the location of the walls and  the location of the exits are assumed to be known by the agent at the start of the simulation. The reasoning behind this is that we assume the agent to have become sufficiently familiar with the building before a fire has broken out. 
+
+On the other hand, an agent is not aware of the locations of any fires at the start of the simulation. When the agent encounters any fires during the simulation as part of his movement, he will add these locations to his own belief state. When the agent tries to move towards the exit, he will use the information in his belief state to try to plan a route avoiding any fire locations that he knows about. 
+
+\subsubsection{Agent Desires}
+We have chosen for a simple model of the desires of the agent: he either wants to roam, or escape. Initially, we set the intention of the agent to roam. As soon as the agent has become aware of any fire locations, the desire of the agent changes to escape. This means he will now try to move towards the exit, alarm other agents by sharing his beliefs on the locations of fires or be panicked. These intentions are explained below.
+
+\subsubsection{Agent Intentions}
+There are four possible intentions an agent can have. These are either roam around, panicked, move towards exit or alarm other. 
+
+When the desire of the agent is to roam, his intention will be to roam around. This is implemented as a random movement, moveing straight ahead with a high probability, otherwise turning left or right (with equal probability). This behaviour is meant to mimic normal human behaviour. We are aware that in most situations, a person would be more likely to stay put or go to a specific location, however to keep the simulation somewhat simple, we decided on this implementation.
+
+When the desire of the agent is to escape, his intention become slightly more complex. If there are any other agents within vision radius, he will not move but instead share his knowledge on the locations of fires with them. This way other agents become aware of the fires aswell, meaning they will move towards the exit as well. Because these agents will have a high probability to move towards the exit, they will likely share a very similar path. This means that most of the time the agents will be close towards eachother and therefore within their communication range. The result is that they will not move whatsoever but instead try to alarm eachother continously. 
+
+To prevent this obviously undesired behaviour, we have hardcoded into the system to only alarm others when you have not done so in the previous tick. Otherwise, the agent will move towards the exit, ignoring the cries of the dying.
+
+However, in doing so we inadvertently have introduced some other undesired aspect into the simulation: agents travelling in groups will now move at half speed compared to agents that move on their own towards the exit. For this reason, we have the agents alternate between the move towards exit and the panicked intentions. When an agent is panicked, it does not move, thereby effectively halving its overall speed and matching his speed with other agents moveing in groups.
+
+\begin{figure}[!ht]
+  \centering
+
+\captionsetup{justification=centering,margin=1cm}
+\begin{tikzpicture}
+\path 
+(2,0) node[circle, double, draw] (des-roam) {Roam}
+(6,0) node[circle, draw] (des-escape) {Escape}
+(2,-2) node[draw] (roam) {Roam}
+(6,-2) node[draw] (escape) {Escape}
+(4,-3) node[draw] (alarm) {Alarm}
+(8,-3) node[draw] (panic) {Panicked};
+
+%\draw[->] (init) -- node {} (des-roam);
+\draw[->] (des-roam) -- node {} (des-escape);
+\draw[->] (des-roam) -- node {} (roam);
+\draw[->] (des-escape) -- node[above,sloped] {} (escape);
+\draw[->] (escape) -- node[above,sloped] {} (alarm);
+\draw[->] (alarm) .. controls +(up:1cm) and +(left:1cm) .. node[above,sloped] {} (escape);
+\draw[->] (escape) -- node[above,sloped] {} (panic);
+\draw[->] (panic) .. controls +(up:1cm) and +(right:1cm) .. node[above,sloped] {} (escape);
+%\draw[->] (init) -| node[near start,below] {label} (roam);
+\end{tikzpicture}
+\caption{Flowchart of agent desires and intentions. Desires are encircled, intentions are in rectangles. Roam is the initial desire.}
+\label{tikz:flow}
+\end{figure}
+
 
 \subsection{NetLogo Controls}
 To provide more insight in the workings of this simulation, we provide a overview below of the controls implemented in NetLogo, as not all of them may be self-explanatory.
