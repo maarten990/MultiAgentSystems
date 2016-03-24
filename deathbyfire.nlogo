@@ -42,6 +42,9 @@ to gather_data [params n]
     set data (lput (list deaths escapes) data)
   ]
 
+  ; overwrite the file if it exists
+  if file-exists? "data.txt"
+    [file-delete "data.txt"]
   file-open "data.txt"
   file-print data
   file-close
@@ -73,6 +76,8 @@ to draw_walls
 end
 
 to save_walls
+  if file-exists? "walls.txt"
+    [file-delete "walls.txt"]
   let drawn_walls [(list pxcor pycor)] of patches with [pcolor = black]
   file-open "walls.txt"
   file-print drawn_walls
@@ -127,15 +132,18 @@ to setup-patches
   ]
 
   ; create 1 exit not on fire
-  set exit (list round random-xcor round random-ycor)
-  let c 0
-  ask patch item 0 exit item 1 exit [ set c pcolor ]
-  while [c != white]
-  [
-    set exit (list round random-xcor round random-ycor)
-    ask patch item 0 exit item 1 exit [ set c pcolor ]
-  ]
+  set exit (list 37 16)
   ask patch item 0 exit item 1 exit [ set pcolor green]
+  ;old, randomized exit
+  ;set exit (list round random-xcor round random-ycor)
+  ;let c 0
+  ;ask patch item 0 exit item 1 exit [ set c pcolor ]
+  ;while [c != white]
+  ;[
+  ;  set exit (list round random-xcor round random-ycor)
+  ;  ask patch item 0 exit item 1 exit [ set c pcolor ]
+  ;]
+  ;ask patch item 0 exit item 1 exit [ set pcolor green]
 
 end
 
@@ -316,13 +324,13 @@ to move-escape
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-345
-10
-685
-371
+313
+13
+1074
+548
 -1
 -1
-10.0
+12.3115
 1
 10
 1
@@ -333,9 +341,9 @@ GRAPHICS-WINDOW
 0
 1
 0
-32
+60
 0
-32
+40
 0
 0
 1
@@ -343,10 +351,10 @@ ticks
 30.0
 
 BUTTON
-30
-32
-96
-65
+66
+31
+132
+64
 NIL
 setup
 NIL
@@ -360,10 +368,10 @@ NIL
 1
 
 SLIDER
-130
-137
-302
-170
+136
+132
+308
+165
 num_persons
 num_persons
 1
@@ -375,10 +383,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-119
-35
-182
-68
+137
+31
+200
+64
 NIL
 go
 T
@@ -392,40 +400,10 @@ NIL
 1
 
 SLIDER
-129
-199
-301
-232
-pct_walls
-pct_walls
-0
-100
-20
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-135
-263
-307
-296
-n_exits
-n_exits
-1
-10
-1
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-142
-316
-316
-349
+136
+170
+310
+203
 fire_spread_rate
 fire_spread_rate
 0
@@ -452,10 +430,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-138
-368
-310
-401
+136
+209
+308
+242
 fire_vision
 fire_vision
 1
@@ -467,15 +445,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-137
-414
-309
-447
+136
+247
+308
+280
 person_vision
 person_vision
 0
 10
-3
+4
 1
 1
 NIL
@@ -493,10 +471,10 @@ throttle_speed
 -1000
 
 BUTTON
-690
-10
-788
-43
+1084
+14
+1182
+47
 NIL
 draw_walls
 T
@@ -510,10 +488,10 @@ NIL
 1
 
 BUTTON
-695
-59
-791
-92
+1084
+51
+1180
+84
 NIL
 save_walls\n
 NIL
@@ -527,10 +505,10 @@ NIL
 1
 
 BUTTON
-703
-101
-801
-134
+1084
+88
+1182
+121
 NIL
 clear_walls\n
 NIL
@@ -544,10 +522,10 @@ NIL
 1
 
 PLOT
-748
-200
-948
-350
+1087
+150
+1287
+300
 Escapees
 time
 # escapees
@@ -562,10 +540,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "if is-list? escapes [plot length escapes]"
 
 PLOT
-750
-377
-950
-527
+1089
+327
+1289
+477
 Deaths
 time
 # deaths
@@ -578,6 +556,23 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "if is-list? deaths [plot length deaths]"
+
+BUTTON
+206
+31
+275
+64
+step
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

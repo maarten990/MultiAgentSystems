@@ -25,7 +25,7 @@ Additionally, we describe the NetLogo implementation, explaining the functions o
 
 \section{Environment}
 \FloatBarrier
-The simulation environment is a 33x33 grid, representing an office space (Figure~
+The simulation environment is a 60x40 grid, representing an office space (Figure~
 \ref{fig:office}). The walls (black tiles) were hand-drawn to craft a somewhat
 realistic layout of rooms and hallways. One exit (green tile) is placed
 randomly, as well as a variable number of initial fires (red tiles). Care is
@@ -145,5 +145,20 @@ The properties fire\_vision and person\_vision control the vision in which each 
 \section{Results}
 
 \section{Conclusion}
+
+\section{Future Work}
+There are various potential improvements to the simulation that haven't been
+implemented due to time constraints. Regarding the simulation environment, it
+would be interesting to automatically generate an office layout based on some
+parameters (e.g. number of exits, wall density, width of corridors, number of
+open areas). This would allow for research to be done into the effect of the
+layout on, for instance, the survival rate or some measure of traffic congestion.
+
+The agents themselves could be parameterised by some measure of personality; for
+example, they could have a probabilistic bias towards warning their colleagues,
+or conversely a bias towards saving themselves without regards for the others.
+This could even be extended to replicate real-world fire safety procedures where
+certain agents (presumably wearing fluorescent yellow jackets) are tasked with
+making sure all the other agents are aware of the fire before fleeing themselves.
 
 \end{document}
