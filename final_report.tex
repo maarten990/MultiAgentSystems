@@ -25,7 +25,7 @@ Additionally, we describe the NetLogo implementation, explaining the functions o
 
 \section{Environment}
 \FloatBarrier
-The simulation environment is a 60x40 grid, representing an office space (Figure~
+The simulation environment is a \(60\times 40\) grid, representing an office space (Figure~
 \ref{fig:office}). The walls (black tiles) were hand-drawn to craft a somewhat
 realistic layout of rooms and hallways. One exit (green tile) is placed
 randomly, as well as a variable number of initial fires (red tiles). Care is
@@ -34,13 +34,11 @@ taken to ensure the exit is reachable, i.e. it is not inside a wall or on fire.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{sp.png}
+  \caption{Science Park building B floor 1, with random fires (red) and preset exit (green) at \(t=0\).}
   \label{fig:office}
-  \caption{Science Park building B floor 1, with random fires (red) and preset exit (green) at t=0}
 \end{figure}
 
-A variable amount of people (ranging from 1 to 25) is spawned, again making sure
-not to doom them by spawning them inside walls or fires. At each tick of the
-simulation, 
+A variable amount of people (ranging from 1 to 25) is spawned, again making sure not to place them inside walls or fires. 
 
 \subsection{Agents}
 The agents represent people trying to escape the burning building.
@@ -62,10 +60,12 @@ intentions described in Table~\ref{tbl:bdi}.
   \label{tbl:bdi}
 \end{table}
 
-Additionally, each agent has a variable vision radius for both detecting fire
-and detecting people to alarm.
+Additionally, each agent has a variable vision radius for detecting fires 
+and a radius for detecting people to alarm.
 
-TODO: detail the flow of desires and intentions
+Next we will discuss the agents beliefs, desires and intentions more in depth. A visual overview on how the agent changes its desires and intentions can be seen in Figure~\ref{tikz:flow}.
+
+
 \subsubsection{Agent Beliefs}
 There are three concept that comprise an agents belief state: the location of walls, location of fire and the location of the exit. Both the location of the walls and  the location of the exits are assumed to be known by the agent at the start of the simulation. The reasoning behind this is that we assume the agent to have become sufficiently familiar with the building before a fire has broken out. 
 
@@ -117,18 +117,18 @@ However, in doing so we inadvertently have introduced some other undesired aspec
 To provide more insight in the workings of this simulation, we provide a overview below of the controls implemented in NetLogo, as not all of them may be self-explanatory.
 
 \subsubsection{Draw, Save and Clear walls}
-Walls used by the simulation are handdrawn and saved in a separate txt file. Upon running Setup, the file is read to redraw the walls.
+Walls used by the simulation are handdrawn and saved in a separate txt file. Upon running \texttt{Setup}, the file is read to redraw the walls.
 
-To use the function, first ensure that Setup is run at least once. If walls are already present, you can click clear\_walls (thereby removing the txt file) and run Setup again to redraw the environment with an empty sheet. Clicking draw\_walls allows you to start drawing with the environment. When you are finished, click draw\_walls again to stop drawing, then click save\_walls to save the new environment, which will now be redrawn every time Setup is run.
+To use the function, first ensure that \texttt{Setup} is run at least once. If walls are already present, you can click \texttt{clear\_walls} (thereby removing the txt file) and run \texttt{Setup} again to redraw the environment with an empty sheet. Clicking \texttt{draw\_walls} allows you to start drawing with the environment. When you are finished, click \texttt{draw\_walls} again to stop drawing, then click \texttt{save\_walls} to save the new environment, which will now be redrawn every time \texttt{Setup} is run.
 
 \subsubsection{Throttle Speed}
-As the simulation may slow down at times, it may be preferrable to watch the simulation at a constant speed. Turning throttle\_speed on slows all steps to an equal speed of 100 milliseconds. This does mean that the overall speed of the simulation is slowed down, however, so this should be off when swift simulations are desired.
+As the simulation may slow down at times, it may be preferrable to watch the simulation at a constant speed. Turning \texttt{throttle\_speed} on slows all steps to an equal speed of 100 milliseconds. This does mean that the overall speed of the simulation is slowed down, however, so this should be off when swift simulations are desired.
 
 \subsubsection{Fire Spread Rate}
-Controls the speed at which fire spreads. At every step, fire may spread to each neighbouring tile with a probability defined by fire\_spread\_rate in promille for each of these tiles.
+Controls the speed at which fire spreads. At every step, we check for every red tile each neighbour, and set in on fire with a certain probability probability defined by \texttt{fire\_spread\_rate} in promille. As a consequence, tiles that are not on fire but are adjacent to 2, 3 or 4 tiles that are, respectively have a 2, 3 or 4 times as high probability to be set on fire.
 
 \subsubsection{Vision}
-The properties fire\_vision and person\_vision control the vision in which each agent can observe nearby fire or other agents respectively. This vision is represented by an invisible circle around the agent, with a radius equal to the value defined on the slider.
+The properties \texttt{fire\_vision} and \texttt{person\_vision} control the vision in which each agent can observe nearby fire or other agents respectively. This vision is represented by an invisible circle around the agent, with a radius equal to the value defined on the slider. We do not take into accounts any walls between the agent and the fire or the other agents.
 
 \FloatBarrier
 \section{Experiments}
