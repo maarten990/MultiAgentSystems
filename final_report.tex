@@ -26,7 +26,7 @@ Additionally, we describe the NetLogo implementation, explaining the functions o
 \section{Simulation implementation}
 \FloatBarrier
 The simulation environment is a \(60\times 40\) grid, representing an office space (Figure~
-\ref{fig:office}). The walls (black tiles) were hand-drawn to craft a somewhat
+\ref{fig:sp}). The walls (black tiles) were hand-drawn to craft a somewhat
 realistic layout of rooms and hallways. One exit (green tile) is placed
 randomly, as well as a variable number of initial fires (red tiles). Care is
 taken to ensure the exit is reachable, i.e. it is not inside a wall or on fire.
@@ -35,7 +35,8 @@ taken to ensure the exit is reachable, i.e. it is not inside a wall or on fire.
   \centering
   \includegraphics[width=0.7\textwidth]{sp.png}
   \caption{Science Park building B floor 1, with random fires (red) and preset exit (green) at \(t=0\).}
-  \label{fig:office}
+  \caption{Science Park building B floor 1, with random fires (red) and preset exit (green) at t=0}  
+  \label{fig:sp}
 \end{figure}
 
 A variable amount of people (ranging from 1 to 25) is spawned, again making sure not to place them inside walls or fires. 
