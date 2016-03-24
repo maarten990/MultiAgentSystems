@@ -42,6 +42,9 @@ to gather_data [params n]
     set data (lput (list deaths escapes) data)
   ]
 
+  ; overwrite the file if it exists
+  if file-exists? "data.txt"
+    [file-delete "data.txt"]
   file-open "data.txt"
   file-print data
   file-close
@@ -392,40 +395,10 @@ NIL
 1
 
 SLIDER
-129
-199
-301
-232
-pct_walls
-pct_walls
-0
-100
-20
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-135
-263
-307
-296
-n_exits
-n_exits
-1
-10
-1
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-142
-316
-316
-349
+128
+185
+302
+218
 fire_spread_rate
 fire_spread_rate
 0
@@ -452,10 +425,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-138
-368
-310
-401
+124
+237
+296
+270
 fire_vision
 fire_vision
 1
@@ -467,10 +440,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-137
-414
-309
-447
+123
+283
+295
+316
 person_vision
 person_vision
 0
