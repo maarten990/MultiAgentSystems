@@ -3,3 +3,4 @@
 *.log
 *.fls
 *.fdb_latexmk
+*.backup
