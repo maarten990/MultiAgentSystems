@@ -224,7 +224,10 @@ to update-intentions
         [set intention "move-escape"]
     ]
     [
-      set intention "move-escape"
+      ifelse intention = "move-escape"
+      [set intention "panicked"]
+      [set intention "move-escape"]
+
     ]
   ]
 
@@ -365,7 +368,7 @@ num_persons
 num_persons
 1
 25
-25
+10
 1
 1
 NIL
@@ -485,7 +488,7 @@ SWITCH
 127
 throttle_speed
 throttle_speed
-1
+0
 1
 -1000
 
