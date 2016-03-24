@@ -132,15 +132,30 @@ The properties fire\_vision and person\_vision control the vision in which each 
 
 \FloatBarrier
 \section{Experiments}
+We investigate the effect of the following properties on the overall survival rate:
 \begin{itemize}
-\item Can we prevent traffic jam behaviour?
-\item How much do the following properties affect overall survival rate?
+\item Number of starting fires (1-5) default: 3
+\item Rate at which fire spreads (10pm, 40pm, 70pm, 100pm) default: 40pm
+\item Number of agents (25) NOTE: if constant, mention it
+\item Agent FoV for spotting fires (1,4,7,10) default: 4
+\item Agent FoV for spotting other agents (1, 4, 7, 10) default: 4
+\item Addition or removal of walls (1, 4, 7, 10) default: 4
+\end{itemize}
+We measure:
 \begin{itemize}
-\item Rate at which fire spreads
-\item Whether agents have prior knowledge of exit locations
-\item The ratio between agents that prioritize saving themselves over saving others
+\item Escapees
+\item Deaths
 \end{itemize}
-\end{itemize}
+
+%\begin{itemize}
+%\item Can we prevent traffic jam behaviour?
+%\item How much do the following properties affect overall survival rate?
+%\begin{itemize}
+%\item Rate at which fire spreads
+%\item Whether agents have prior knowledge of exit locations
+%\item The ratio between agents that prioritize saving themselves over saving others
+%\end{itemize}
+%\end{itemize}
 
 \section{Results}
 
