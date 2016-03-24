@@ -324,13 +324,13 @@ to move-escape
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-299
-10
-1157
-611
+313
+13
+1074
+548
 -1
 -1
-13.90244
+12.3115
 1
 10
 1
@@ -351,10 +351,10 @@ ticks
 30.0
 
 BUTTON
-30
-32
-96
-65
+66
+31
+132
+64
 NIL
 setup
 NIL
@@ -368,10 +368,10 @@ NIL
 1
 
 SLIDER
-130
-137
-302
-170
+136
+132
+308
+165
 num_persons
 num_persons
 1
@@ -383,10 +383,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-119
-35
-182
-68
+137
+31
+200
+64
 NIL
 go
 T
@@ -400,10 +400,10 @@ NIL
 1
 
 SLIDER
-128
-185
-302
-218
+136
+170
+310
+203
 fire_spread_rate
 fire_spread_rate
 0
@@ -430,10 +430,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-124
-237
-296
-270
+136
+209
+308
+242
 fire_vision
 fire_vision
 1
@@ -445,15 +445,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-123
-283
-295
-316
+136
+247
+308
+280
 person_vision
 person_vision
 0
 10
-3
+4
 1
 1
 NIL
@@ -471,10 +471,10 @@ throttle_speed
 -1000
 
 BUTTON
-3
-41
-101
-74
+1084
+14
+1182
+47
 NIL
 draw_walls
 T
@@ -488,10 +488,10 @@ NIL
 1
 
 BUTTON
-8
-90
-104
-123
+1084
+51
+1180
+84
 NIL
 save_walls\n
 NIL
@@ -505,10 +505,10 @@ NIL
 1
 
 BUTTON
-16
-132
-114
-165
+1084
+88
+1182
+121
 NIL
 clear_walls\n
 NIL
@@ -522,10 +522,10 @@ NIL
 1
 
 PLOT
-61
-231
-261
-381
+1087
+150
+1287
+300
 Escapees
 time
 # escapees
@@ -540,10 +540,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "if is-list? escapes [plot length escapes]"
 
 PLOT
-63
-408
-263
-558
+1089
+327
+1289
+477
 Deaths
 time
 # deaths
@@ -556,6 +556,23 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "if is-list? deaths [plot length deaths]"
+
+BUTTON
+206
+31
+275
+64
+step
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
