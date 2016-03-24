@@ -76,6 +76,8 @@ to draw_walls
 end
 
 to save_walls
+  if file-exists? "walls.txt"
+    [file-delete "walls.txt"]
   let drawn_walls [(list pxcor pycor)] of patches with [pcolor = black]
   file-open "walls.txt"
   file-print drawn_walls
@@ -319,13 +321,13 @@ to move-escape
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-345
+299
 10
-685
-371
+1157
+611
 -1
 -1
-10.0
+13.90244
 1
 10
 1
@@ -336,9 +338,9 @@ GRAPHICS-WINDOW
 0
 1
 0
-32
+60
 0
-32
+40
 0
 0
 1
@@ -466,10 +468,10 @@ throttle_speed
 -1000
 
 BUTTON
-690
-10
-788
-43
+3
+41
+101
+74
 NIL
 draw_walls
 T
@@ -483,10 +485,10 @@ NIL
 1
 
 BUTTON
-695
-59
-791
-92
+8
+90
+104
+123
 NIL
 save_walls\n
 NIL
@@ -500,10 +502,10 @@ NIL
 1
 
 BUTTON
-703
-101
-801
-134
+16
+132
+114
+165
 NIL
 clear_walls\n
 NIL
@@ -517,10 +519,10 @@ NIL
 1
 
 PLOT
-748
-200
-948
-350
+61
+231
+261
+381
 Escapees
 time
 # escapees
@@ -535,10 +537,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "if is-list? escapes [plot length escapes]"
 
 PLOT
-750
-377
-950
-527
+63
+408
+263
+558
 Deaths
 time
 # deaths
