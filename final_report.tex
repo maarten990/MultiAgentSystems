@@ -23,7 +23,7 @@ Using this simulation, we aim to find what affects the speed and survival rate o
 
 Additionally, we describe the NetLogo implementation, explaining the functions of buttons and how they are implemented.
 
-\section{Environment}
+\section{Simulation implementation}
 \FloatBarrier
 The simulation environment is a \(60\times 40\) grid, representing an office space (Figure~
 \ref{fig:office}). The walls (black tiles) were hand-drawn to craft a somewhat
@@ -160,5 +160,7 @@ or conversely a bias towards saving themselves without regards for the others.
 This could even be extended to replicate real-world fire safety procedures where
 certain agents (presumably wearing fluorescent yellow jackets) are tasked with
 making sure all the other agents are aware of the fire before fleeing themselves.
+
+Lastly, improvements could be made to the communication protocol. For example, an agent could track the minimum knowledge other agents have about fires. That way he would be able to figure out when alarming someone would be useless, as the agent already is aware of the fact that the other agent knows at least as much as himself.
 
 \end{document}
