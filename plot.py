@@ -19,17 +19,16 @@ for fname in sys.argv[1:]:
 # prepare the plot
 plt.figure()
 plt.xlabel('Time')
-plt.ylabel('Number of people')
+plt.ylabel('Rate of people')
 plt.hold(True)
 
-for idx, n_persons in enumerate([5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]):
+for params, n_persons in enumerate([5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]):
     dead_ticks = []
     escape_ticks = []
 
-    # HIER GAAT HET FOUT
-    for trial in data[idx]:
-        dead_ticks.append(trial[0])
-        escape_ticks.append(trial[1])
+    for trial in data:
+        dead_ticks.append(trial[params][0])
+        escape_ticks.append(trial[params][1])
 
     # I like this line
     final_tick = max(max(max(dead_ticks)), max(max(escape_ticks)))
@@ -41,6 +40,10 @@ for idx, n_persons in enumerate([5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]):
                  for i in escape_ticks]
     dead_ys = [list(map(lambda t: num_at_tick(i, t), xs))
                  for i in dead_ticks]
+
+    # divide by total number of people
+    escape_ys = np.array(escape_ys) / float(n_persons)
+    dead_ys = np.array(dead_ys) / float(n_persons)
 
     # just uncomment the one you want, ugly but fuck it
     plt.plot(xs, np.average(escape_ys, axis=0), label='{} people'.format(n_persons))
