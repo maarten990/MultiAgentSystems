@@ -84,27 +84,6 @@ To prevent this obviously undesired behaviour, we have hardcoded into the system
 
 However, in doing so we inadvertently have introduced some other undesired aspect into the simulation: agents travelling in groups will now move at half speed compared to agents that move on their own towards the exit. For this reason, we have the agents alternate between the move towards exit and the panicked intentions. When an agent is panicked, it does not move, thereby effectively halving its overall speed and matching his speed with other agents moving in groups.
 
-\subsubsection{Pathplanning}
-To find their way among the complex environment of walls, people and fires,
-agents make use of a simple $A^*$ search algorithm. The
-heuristic function is the Manhattan distance, mimicking the way the agents
-actually move. Tiles containing a wall or fire are considered inaccessible
-by the algorithm, while tiles containing agents are not (as other nearby
-agents are most likely also moving towards the exit, it makes no sense to plan
-a detour just because someone who is moving in the same direction is blocking a
-doorway).
-
-One problem that pops up is that each agent will explore the entire
-search space if the exit is blocked, taking up a lot of processing power and
-slowing the simulation to a crawl. This is alleviated by assuming that because
-each obstacle is permanent (fires will never go out, and walls aren't going
-anywhere unless they're replaced by fire), there is no reason to keep trying
-after the path calculation has failed once for an agent. As a result, these
-agents will stand around waiting for their impending doom, freeing up CPU time
-for their colleagues that still have a chance of making it out alive.
-
-Another thing to note is that the planning algorithm has no preference to stay away from fires. If an agent has to move 10 steps down and 10 steps left to get to the exit, the planning algorithm will not favor going down first and left next or the other way around, even though one route may be much closer or even adjacent to tiles that are on fire. As a consequence, sometimes agents will die as the fire spreads to a new tile while this could have avoided easily had the agent chosen another path to the exit.
-
 \begin{figure}[!ht]
   \centering
 
@@ -131,6 +110,27 @@ Another thing to note is that the planning algorithm has no preference to stay a
 \caption{Flowchart of agent desires and intentions. Desires are encircled, and intentions are in rectangles. Roam is the initial desire.}
 \label{tikz:flow}
 \end{figure}
+
+\subsubsection{Pathplanning}
+To find their way among the complex environment of walls, people and fires,
+agents make use of a simple $A^*$ search algorithm. The
+heuristic function is the Manhattan distance, mimicking the way the agents
+actually move. Tiles containing a wall or fire are considered inaccessible
+by the algorithm, while tiles containing agents are not (as other nearby
+agents are most likely also moving towards the exit, it makes no sense to plan
+a detour just because someone who is moving in the same direction is blocking a
+doorway).
+
+One problem that pops up is that each agent will explore the entire
+search space if the exit is blocked, taking up a lot of processing power and
+slowing the simulation to a crawl. This is alleviated by assuming that because
+each obstacle is permanent (fires will never go out, and walls aren't going
+anywhere unless they're replaced by fire), there is no reason to keep trying
+after the path calculation has failed once for an agent. As a result, these
+agents will stand around waiting for their impending doom, freeing up CPU time
+for their colleagues that still have a chance of making it out alive.
+
+Another thing to note is that the planning algorithm has no preference to stay away from fires. If an agent has to move 10 steps down and 10 steps left to get to the exit, the planning algorithm will not favor going down first and left next or the other way around, even though one route may be much closer or even adjacent to tiles that are on fire. As a consequence, sometimes agents will die as the fire spreads to a new tile while this could have avoided easily had the agent chosen another path to the exit.
 
 
 \subsection{NetLogo Controls}
