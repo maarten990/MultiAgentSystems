@@ -4,7 +4,7 @@ extensions [table]
 globals [exit walls deaths escapes]
 
 breed [persons person]
-persons-own [b_walls b_fires b_exits desire intention escape_route]
+persons-own [b_walls b_fires b_exits desire intention escape_route doomed]
 ; beliefs: location of exit, walls, aware fires, (location of other agents)
 ; desires: roam, help, escape, (find exit)
 ; intention: move-roam, move-escape, alarm other
@@ -15,7 +15,7 @@ to test-num-persons
   set num_fires 1
 
   let params table:make
-  table:put params "num_persons" (list 5 10 15 20 25)
+  table:put params "num_persons" (list 5 10 15 25 30 50)
 
   gather_data params "num_persons.txt"
 end
@@ -187,6 +187,7 @@ to setup-persons
     set b_exits exit
     set desire "roam"
     set escape_route []
+    set doomed false
   ]
 end
 
@@ -315,6 +316,9 @@ to-report merge-lists [x y]
 end
 
 to move-escape
+  if doomed = true
+    [stop]
+
   ; remove the agent if it has reached the exit
   if (list round pxcor round pycor) = exit
   [set escapes (lput ticks escapes)
@@ -325,9 +329,11 @@ to move-escape
   if empty? escape_route
     [set escape_route (search_path (list round pxcor round pycor) b_exits)]
 
-  ; if there's still no route, the path is blocked right now
-  if empty? escape_route
-    [stop]
+  ; if there's still no route, the agent is doomed
+  if empty? escape_route [
+    set doomed true
+    stop
+  ]
 
   let target (first escape_route)
   set escape_route (but-first escape_route)
