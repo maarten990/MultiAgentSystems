@@ -105,6 +105,8 @@ after the path calculation has failed once for an agent. As a result, these
 agents will stand around waiting for their impending doom, freeing up CPU time
 for their colleagues that still have a chance of making it out alive.
 
+Another thing to note is that the planning algorithm has no preference to stay away from fires. If an agent has to move 10 steps down and 10 steps left to get to the exit, the planning algorithm will not favor going down first and left next or the other way around, even though one route may be much closer or even adjacent to tiles that are on fire. As a consequence, sometimes agents will die as the fire spreads to a new tile while this could have avoided easily had the agent chosen another path to the exit.
+
 \begin{figure}[!ht]
   \centering
 
@@ -165,9 +167,11 @@ We then vary the number of people between 5, 10 and increments of 10 onwards to 
 
 To analyze the overall survival rate, we track for each agent when it escapes or dies. This is measured in the number of ticks since the simulation started. For each experiment, we run the simulation 16 times and average the results for each timestep (ticks). This results in two graphs, one for the number of deaths over time and one for the number of escapees over time.
 
-We expect that, as the number of persons increase, the variance in the survival rate will increase as well. However, when the number of persons gets sufficiently large, when someone spots a fire it might be communicated effectively throughout the population, thereby increasing the survival rate and decreasing the variance. We can easily calculate an upper bound for this to occur. The environment is \(60\times 40\), but the outside is walls. So the effective area is \(59 \times 39 = 2301\) tiles. The default communication vision for agents is 4. For ease of calculation, we shall fit a square of area 8 inside this circle. If all the agents are evenly spaced, then we need 288 agents to monitor the entire simulation.
+We expect that, as the number of persons increase, the variance in the survival rate will increase as well. However, when the number of persons gets sufficiently large, when someone spots a fire it might be communicated effectively throughout the population, thereby increasing the survival rate and decreasing the variance. We can easily calculate an upper bound for this to occur. 
 
-In practice, it is likely that we shall witness this effect already with a far smaller number of agents, as the calculation above disregards the movement of agents. Exactly how many, we will try to find out with our experiments.
+The environment is \(60\times 40\), but the outside is walls. So the effective area is \(59 \times 39 = 2301\) tiles. The default communication vision for agents is 4. For ease of calculation, we shall fit a square of area 8 inside this circle. If all the agents are evenly spaced, then we need 288 agents to monitor the entire simulation.
+
+In practice, it is likely that we shall witness this effect already with a far smaller number of agents, as the calculation above disregards (among other things) the movement of agents. Exactly how many, we will try to find out with our experiments.
 
 %\begin{itemize}
 %\item Can we prevent traffic jam behaviour?
@@ -180,7 +184,7 @@ In practice, it is likely that we shall witness this effect already with a far s
 %\end{itemize}
 
 \section{Results}
-The results of our experiments can be seen in Figure~\ref{fig:escape}. Here we can see that the percentage of survivors is the highest for 100 agents, the highest value that we tested. Second is 90 agents, then 80 and this trend more or less continues for smaller number of agents. We have also run 2 tests with 200 agents, both having an escape rate of around 90\%. This indicates that our hypothesis, that a bigger number of agents results in more survivors, is true. 
+The results of our experiments can be seen in Figure~\ref{fig:escape}. Here we can see that the percentage of survivors is the highest for 100 agents, the highest value that we tested. Second is 90 agents, then 80 and this trend more or less continues for smaller number of agents. We have also run 2 tests with 200 agents, both having an escape rate of around 90\%. This indicates that our hypothesis, that a bigger number of agents results in more survivors, holds true. 
 
 \begin{figure}[ht]
   \centering
@@ -189,7 +193,7 @@ The results of our experiments can be seen in Figure~\ref{fig:escape}. Here we c
   \label{fig:escape}
 \end{figure}
 
-With data extracted from the same set of runs, we have created Figure~\ref{fig:deaths}. This figure pictures the number of deaths over time. Again, we see that the higher the number of agents, the smaller the percentage of deaths is. However, we can notice one more thing. There is a slight S-shape or arctan-shape to the lines. We can attribute this to the fire spread rate. At first, the fire is very small but grows faster and faster. At some points, however this growth is stopped by the edges of the environment. This usually happens when the fire has covered a third of the map, depending on the initial location of the fire. If a smaller number of new tiles are set of fire on average per simulation step, we will see a decline in death percentage per step.
+With data extracted from the same set of simulations, we have created Figure~\ref{fig:deaths}. This figure pictures the number of deaths over time. As is to be expected, we see that the higher the number of agents, the smaller the percentage of deaths is. However, we can notice one more thing. There is a slight S-shape or arctan-shape to the lines. We can attribute this to the fire spread rate. At first, the fire is very small but grows faster and faster. At some points, however this growth is stopped by the edges of the environment. This usually happens when the fire has covered a third of the map, depending on the initial location of the fire. If a smaller number of new tiles are set of fire on average per simulation step, we will see a decline in death percentage per step.
 
 \begin{figure}[ht]
   \centering
