@@ -9,12 +9,24 @@ persons-own [b_walls b_fires b_exits desire intention escape_route]
 ; desires: roam, help, escape, (find exit)
 ; intention: move-roam, move-escape, alarm other
 
-to run-tests
-  let params table:make
-  table:put params "num_fires" (list 1 5)
-  table:put params "fire_spread_rate" (list 1 20)
+; test the impact of the number of people with 1 fire source
+to test-num-persons
+  set num_fires 1
 
-  gather_data params 2
+  let params table:make
+  table:put params "num_persons" (list 5 10 15 20 25)
+
+  gather_data params "num_persons.txt"
+end
+
+; test the impact of the number of fire sources with a static number of peole
+to test-num-fires
+  set num_persons 20
+
+  let params table:make
+  table:put params "num_fires" (list 1 2 5 10 25)
+
+  gather_data params "num_fires.txt"
 end
 
 to-report parse-args [params n]
@@ -27,8 +39,10 @@ to-report parse-args [params n]
   report queries
 end
 
-to gather_data [params n]
+to gather_data [params outfile]
   let data []
+  let n length table:get params (first table:keys params)
+
   foreach n-values n [?] [
     print (word "Iteration " ?)
 
@@ -43,9 +57,9 @@ to gather_data [params n]
   ]
 
   ; overwrite the file if it exists
-  if file-exists? "data.txt"
-    [file-delete "data.txt"]
-  file-open "data.txt"
+  if file-exists? outfile
+    [file-delete outfile]
+  file-open outfile
   file-print data
   file-close
 end
@@ -423,7 +437,7 @@ num_fires
 num_fires
 0
 1000
-5
+1
 1
 1
 NIL
