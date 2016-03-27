@@ -27,15 +27,14 @@ Additionally, we describe the NetLogo implementation, explaining the functions o
 \FloatBarrier
 The simulation environment is a \(60\times 40\) grid, representing an office space (Figure~
 \ref{fig:sp}). The walls (black tiles) were hand-drawn to craft a somewhat
-realistic layout of rooms and hallways. One exit (green tile) is placed
-randomly, as well as a variable number of initial fires (red tiles). Care is
-taken to ensure the exit is reachable, i.e. it is not inside a wall or on fire.
+realistic layout of rooms and hallways. In this case, we chose to base the layout on floor 1 of the B building of Amsterdam Science Park. One exit (green tile) is placed
+at a preset position, accompanied by a variable number of randomly placed initial fires (red tiles). 
+%Care is taken to ensure the exit is reachable, i.e. it is not inside a wall or on fire.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{sp.png}
   \caption{Science Park building B floor 1, with random fires (red) and preset exit (green) at \(t=0\).}
-  \caption{Science Park building B floor 1, with random fires (red) and preset exit (green) at t=0}  
   \label{fig:sp}
 \end{figure}
 
@@ -68,23 +67,23 @@ Next we will discuss the agents beliefs, desires and intentions more in depth. A
 
 
 \subsubsection{Agent Beliefs}
-There are three concept that comprise an agents belief state: the location of walls, location of fire and the location of the exit. Both the location of the walls and  the location of the exits are assumed to be known by the agent at the start of the simulation. The reasoning behind this is that we assume the agent to have become sufficiently familiar with the building before a fire has broken out. 
+There are three concepts that comprise an agents belief state: the location of walls, location of fire and the location of the exit. Both the location of the walls and  the location of the exits are assumed to be known by the agent at the start of the simulation. The reasoning behind this is that we assume the agent to have become sufficiently familiar with the building before a fire has broken out. 
 
 On the other hand, an agent is not aware of the locations of any fires at the start of the simulation. When the agent encounters any fires during the simulation as part of his movement, he will add these locations to his own belief state. When the agent tries to move towards the exit, he will use the information in his belief state to try to plan a route avoiding any fire locations that he knows about. 
 
 \subsubsection{Agent Desires}
-We have chosen for a simple model of the desires of the agent: he either wants to roam, or escape. Initially, we set the intention of the agent to roam. As soon as the agent has become aware of any fire locations, the desire of the agent changes to escape. This means he will now try to move towards the exit, alarm other agents by sharing his beliefs on the locations of fires or be panicked. These intentions are explained below.
+We have chosen for a simple model of the desires of the agent: they either want to roam or escape. Initially, we set the intention of the agent to roam. As soon as the agent has become aware of any fire locations, the desire of the agent changes to escape. This means he will now try to move towards the exit, alarm other agents by sharing his beliefs on the locations of fires or be panicked. These intentions are explained below.
 
 \subsubsection{Agent Intentions}
-There are four possible intentions an agent can have. These are either roam around, panicked, move towards exit or alarm other. 
+There are four possible intentions an agent can have. These are either \textit{roam around}, \textit{panicked}, \textit{move towards exit} or \textit{alarm other}. 
 
-When the desire of the agent is to roam, his intention will be to roam around. This is implemented as a random movement, moveing straight ahead with a high probability, otherwise turning left or right (with equal probability). This behaviour is meant to mimic normal human behaviour. We are aware that in most situations, a person would be more likely to stay put or go to a specific location, however to keep the simulation somewhat simple, we decided on this implementation.
+When the desire of the agent is to roam, his intention will be to roam around. This is implemented as a random movement, moving straight ahead with a high probability or otherwise turning left or right (with equal probability). This behaviour is meant to mimic normal human behaviour. We are aware that in most situations, a person would be more likely to stay put or go to a specific location, however to keep the simulation somewhat simple, we decided on this implementation.
 
-When the desire of the agent is to escape, his intention become slightly more complex. If there are any other agents within vision radius, he will not move but instead share his knowledge on the locations of fires with them. This way other agents become aware of the fires aswell, meaning they will move towards the exit as well. Because these agents will have a high probability to move towards the exit, they will likely share a very similar path. This means that most of the time the agents will be close towards eachother and therefore within their communication range. The result is that they will not move whatsoever but instead try to alarm eachother continously. 
+When the desire of the agent is to escape, his intention becomes slightly more complex. If there are any other agents within vision radius, he will not move but instead share his knowledge on the locations of fires with them. This way other agents become aware of the fires as well, meaning they will move towards the exit as well. Because these agents will have a high probability to move towards the exit, they will likely share a very similar path. This means that most of the time the agents will be close towards each other and therefore within their communication range. The result would normally be that they would not move whatsoever but instead try to alarm each other continuously. 
 
 To prevent this obviously undesired behaviour, we have hardcoded into the system to only alarm others when you have not done so in the previous tick. Otherwise, the agent will move towards the exit, ignoring the cries of the dying.
 
-However, in doing so we inadvertently have introduced some other undesired aspect into the simulation: agents travelling in groups will now move at half speed compared to agents that move on their own towards the exit. For this reason, we have the agents alternate between the move towards exit and the panicked intentions. When an agent is panicked, it does not move, thereby effectively halving its overall speed and matching his speed with other agents moveing in groups.
+However, in doing so we inadvertently have introduced some other undesired aspect into the simulation: agents travelling in groups will now move at half speed compared to agents that move on their own towards the exit. For this reason, we have the agents alternate between the move towards exit and the panicked intentions. When an agent is panicked, it does not move, thereby effectively halving its overall speed and matching his speed with other agents moving in groups.
 
 \begin{figure}[!ht]
   \centering
@@ -109,24 +108,24 @@ However, in doing so we inadvertently have introduced some other undesired aspec
 \draw[->] (panic) .. controls +(up:1cm) and +(right:1cm) .. node[above,sloped] {} (escape);
 %\draw[->] (init) -| node[near start,below] {label} (roam);
 \end{tikzpicture}
-\caption{Flowchart of agent desires and intentions. Desires are encircled, intentions are in rectangles. Roam is the initial desire.}
+\caption{Flowchart of agent desires and intentions. Desires are encircled, and intentions are in rectangles. Roam is the initial desire.}
 \label{tikz:flow}
 \end{figure}
 
 
 \subsection{NetLogo Controls}
-To provide more insight in the workings of this simulation, we provide a overview below of the controls implemented in NetLogo, as not all of them may be self-explanatory.
+To give more insight in the workings of this simulation, we provide a overview below of the controls implemented in NetLogo, as not all of them may be self-explanatory.
 
 \subsubsection{Draw, Save and Clear walls}
-Walls used by the simulation are handdrawn and saved in a separate txt file. Upon running \texttt{Setup}, the file is read to redraw the walls.
+Walls used by the simulation are hand drawn and saved in a separate txt file. Upon running \texttt{Setup}, the file is read to redraw the walls.
 
-To use the function, first ensure that \texttt{Setup} is run at least once. If walls are already present, you can click \texttt{clear\_walls} (thereby removing the txt file) and run \texttt{Setup} again to redraw the environment with an empty sheet. Clicking \texttt{draw\_walls} allows you to start drawing with the environment. When you are finished, click \texttt{draw\_walls} again to stop drawing, then click \texttt{save\_walls} to save the new environment, which will now be redrawn every time \texttt{Setup} is run.
+To use the function, first ensure that \texttt{Setup} has been run at least once. If walls are already present, you can click \texttt{clear\_walls} (thereby removing the txt file) and run \texttt{Setup} again to redraw the environment with an empty sheet. Clicking \texttt{draw\_walls} allows you to start drawing with the environment. When you are finished, click \texttt{draw\_walls} again to stop drawing, then click \texttt{save\_walls} to save the new environment, which will now be redrawn every time \texttt{Setup} is run.
 
 \subsubsection{Throttle Speed}
-As the simulation may slow down at times, it may be preferrable to watch the simulation at a constant speed. Turning \texttt{throttle\_speed} on slows all steps to an equal speed of 100 milliseconds. This does mean that the overall speed of the simulation is slowed down, however, so this should be off when swift simulations are desired.
+As the simulation may slow down at times, it may be preferable to watch the simulation at a constant speed. Turning \texttt{throttle\_speed} on slows all steps to an equal speed of 100 milliseconds. This does mean that the overall speed of the simulation is slowed down, however, so this should be off when swift simulations are desired.
 
 \subsubsection{Fire Spread Rate}
-Controls the speed at which fire spreads. At every step, we check for every red tile each neighbour, and set in on fire with a certain probability probability defined by \texttt{fire\_spread\_rate} in promille. As a consequence, tiles that are not on fire but are adjacent to 2, 3 or 4 tiles that are, respectively have a 2, 3 or 4 times as high probability to be set on fire.
+Controls the speed at which fire spreads. At every step, for every red tile's neighbours, they are set on fire with a certain probability defined by \texttt{fire\_spread\_rate} per mille. As a consequence, tiles that are not on fire but are adjacent to two or more tiles that are have a higher probability to be set on fire.
 
 \subsubsection{Vision}
 The properties \texttt{fire\_vision} and \texttt{person\_vision} control the vision in which each agent can observe nearby fire or other agents respectively. This vision is represented by an invisible circle around the agent, with a radius equal to the value defined on the slider. We do not take into accounts any walls between the agent and the fire or the other agents.
@@ -144,7 +143,7 @@ We investigate the effect of the following properties on the overall survival ra
 \end{itemize}
 To analyze the overall survival rate, we track for each agent when it escapes or dies. This is measured in the number of ticks since the simulation started. 
 
-We expect that, as the number of persons increase, the variance in the survival rate will increase as well. However, when the number of persons gets sufficiently large, when someone spotted a fire it might be communicated effectively throughout the population, thereby increasing the survival rate and decreasing the variance. We can easily calculate an upper bound for this to occur. The environment is \(60\times 40\), but the outside is walls. So the effective area is \(59 \times 39 = 2301\). The communication vision for agents is 4. For ease of calculation, we shall fit a square of area 8 inside this circle. If all the agents are evenly space, then we need 288 agents to monitor the entire simulation.
+We expect that, as the number of persons increase, the variance in the survival rate will increase as well. However, when the number of persons gets sufficiently large, when someone spots a fire it might be communicated effectively throughout the population, thereby increasing the survival rate and decreasing the variance. We can easily calculate an upper bound for this to occur. The environment is \(60\times 40\), but the outside is walls. So the effective area is \(59 \times 39 = 2301\) tiles. The default communication vision for agents is 4. For ease of calculation, we shall fit a square of area 8 inside this circle. If all the agents are evenly spaced, then we need 288 agents to monitor the entire simulation.
 
 In practice, it is likely that we shall witness this effect already with a far smaller number of agents, as the calculation above disregards the movement of agents. Exactly how many, we will try to find out with our experiments.
 
@@ -163,8 +162,7 @@ In practice, it is likely that we shall witness this effect already with a far s
 \section{Conclusion}
 
 \section{Future Work}
-There are various potential improvements to the simulation that haven't been
-implemented due to time constraints. One easy extension would be to incorporate ``Fire detector'' agents. These agents would have a higher fire vision and communication radius than other agents, but would be stationary and not die in fire. This would probably increase the survival rate if the fire detectors are space evenly in the environment.
+There are various potential improvements to the simulation. One easy extension would be to incorporate "Fire detector" agents. These agents would have a higher fire vision and communication radius than other agents, but would be stationary and not die in fire. This would probably increase the survival rate if the fire detectors are space evenly in the environment.
 
 Regarding the simulation environment, it
 would be interesting to automatically generate an office layout based on some
