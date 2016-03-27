@@ -6,6 +6,7 @@
 \usepackage{placeins}
 \usepackage{booktabs}
 \usepackage{tikz}
+\usepackage{textcomp}
 
 \title{Building Evacuation}
 \author{Maarten de Jonge \\
@@ -151,16 +152,18 @@ The properties \texttt{fire\_vision} and \texttt{person\_vision} control the vis
 
 \FloatBarrier
 \section{Experiments}
-We investigate the effect of the following properties on the overall survival rate:
+For this experiment, we investigate the effect of the number of people on the overall survival rate. To do so, we set up a basic case with the following properties:
 \begin{itemize}
-\item Number of starting fires (1-5) default: 3
-\item Rate at which fire spreads (10pm, 40pm, 70pm, 100pm) default: 40pm
-\item Number of agents (25) NOTE: if constant, mention it
-\item Agent FoV for spotting fires (1,4,7,10) default: 4
-\item Agent FoV for spotting other agents (1, 4, 7, 10) default: 4
-\item Addition or removal of walls (1, 4, 7, 10) default: 4
+\item Number of starting fires: 1
+\item Rate at which fire spreads: 20\textperthousand
+\item Agent FoV for spotting fires: 3
+\item Agent FoV for spotting other agents: 4
+\item Addition or removal of walls: 4
 \end{itemize}
-To analyze the overall survival rate, we track for each agent when it escapes or dies. This is measured in the number of ticks since the simulation started. 
+
+We then vary the number of people between 5, 10 and increments of 10 onwards to 100. In total, these are 11 separate experiments.
+
+To analyze the overall survival rate, we track for each agent when it escapes or dies. This is measured in the number of ticks since the simulation started. For each experiment, we run the simulation 16 times and average the results for each timestep (ticks). This results in two graphs, one for the number of deaths over time and one for the number of escapees over time.
 
 We expect that, as the number of persons increase, the variance in the survival rate will increase as well. However, when the number of persons gets sufficiently large, when someone spots a fire it might be communicated effectively throughout the population, thereby increasing the survival rate and decreasing the variance. We can easily calculate an upper bound for this to occur. The environment is \(60\times 40\), but the outside is walls. So the effective area is \(59 \times 39 = 2301\) tiles. The default communication vision for agents is 4. For ease of calculation, we shall fit a square of area 8 inside this circle. If all the agents are evenly spaced, then we need 288 agents to monitor the entire simulation.
 
