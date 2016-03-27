@@ -10,14 +10,15 @@ persons-own [b_walls b_fires b_exits desire intention escape_route doomed]
 ; intention: move-roam, move-escape, alarm other
 
 ; test the impact of the number of people with 1 fire source
-to test-num-persons
-  user-message "value"
+to test-num-persons [n]
   set num_fires 1
 
   let params table:make
-  table:put params "num_persons" (list 5 10 15 25 30 50)
+  table:put params "num_persons" (list 5 10 20 30 40 50 60 70 80 90 100)
 
-  gather_data params "num_persons.txt"
+  foreach n-values n [?] [
+    gather_data params (word "num_persons_" ? ".txt")
+  ]
 end
 
 ; test the impact of the number of fire sources with a static number of peole
