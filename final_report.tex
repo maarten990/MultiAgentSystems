@@ -22,7 +22,7 @@ In this report we simulate people escaping from a burning building using the BDI
 
 Using this simulation, we aim to find what affects the speed and survival rate of such an evacuation.
 
-Additionally, we describe the NetLogo implementation, explaining the functions of buttons and how they are implemented.
+Additionally, we describe the NetLogo implementation, explaining the functions of buttons and how they are implemented. In Section~\ref{sec:experiments} we explain our experimentation setup and Section~\ref{sec:results} contains both our results and discussion of them. Section~\ref{sec:conclusion} lists our conclusions and Section~\ref{sec:future} talks about the many ways in which this versatile system can be extended.
 
 \section{Simulation implementation}
 \FloatBarrier
@@ -154,6 +154,7 @@ The properties \texttt{fire\_vision} and \texttt{person\_vision} control the vis
 
 \FloatBarrier
 \section{Experiments}
+\label{sec:experiments}
 For this experiment, we investigate the effect of the number of people on the overall survival rate. To do so, we set up a basic case with the following properties:
 \begin{itemize}
 \item Number of starting fires: 1
@@ -184,6 +185,7 @@ In practice, it is likely that we shall witness this effect already with a far s
 %\end{itemize}
 
 \section{Results}
+\label{sec:results}
 The results of our experiments can be seen in Figure~\ref{fig:escape}. Here we can see that the percentage of survivors is the highest for 100 agents, the highest value that we tested. Second is 90 agents, then 80 and this trend more or less continues for smaller number of agents. We have also run 2 tests with 200 agents, both having an escape rate of around 90\%. This indicates that our hypothesis, that a bigger number of agents results in more survivors, holds true. 
 
 \begin{figure}[ht]
@@ -205,9 +207,11 @@ With data extracted from the same set of simulations, we have created Figure~\re
 Another interesting behaviour we have found is that especially for simulations with many agents, a long queue is formed heading for the exit. Because of the communication protocol, an agent only moves every other tick. To be more precise, it moves when there is a free spot to move to. The pathfinding does not try to find alternative routes towards the exit if the current route is blocked by agents. Therefore, a long line of maybe 40--60 agents is formed towards the exit, while in the meantime a fire is growing literally 1 tile away from the last person in line. A more intelligent agent would take a longer route towards the exit, if it exists, just to be farther away from the fire. Our agents are incapable of this more advanced behaviour, resulting in (unnecessary) casualties. 
 
 \section{Conclusion}
+\label{sec:conclusion}
 For this project we have built a simple building evacuation simulation in NetLogo. The agents in this simulation can detect fire, navigate towards a known exit and alarm others of the fire on their way. We have ran multiple simulations with varying number of agents, to examine the survival in these cases. We hypothesised that the more agents are in the simulation, the higher the survival rate would be, due to earlier detection of the fire and the faster alarming of others. We have found from the data evidence that supports our hypothesis. 
 
 \section{Future Work}
+\label{sec:future}
 There are various potential improvements to the simulation. One easy extension would be to incorporate ``Fire detector'' agents. These agents would have a higher fire vision and communication radius than other agents, but would be stationary and not die in fire. This would probably increase the survival rate if the fire detectors are space evenly in the environment.
 
 Regarding the simulation environment, it
