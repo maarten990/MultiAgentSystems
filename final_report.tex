@@ -85,6 +85,25 @@ To prevent this obviously undesired behaviour, we have hardcoded into the system
 
 However, in doing so we inadvertently have introduced some other undesired aspect into the simulation: agents travelling in groups will now move at half speed compared to agents that move on their own towards the exit. For this reason, we have the agents alternate between the move towards exit and the panicked intentions. When an agent is panicked, it does not move, thereby effectively halving its overall speed and matching his speed with other agents moving in groups.
 
+\subsubsection{Pathplanning}
+To find their way among the complex environment of walls, people and fires,
+agents make use of a simple $A^*$ search algorithm. The
+heuristic function is the Manhattan distance, mimicking the way the agents
+actually move. Tiles containing a wall or fire are considered inaccessible
+by the algorithm, while tiles containing agents are not (as other nearby
+agents are most likely also moving towards the exit, it makes no sense to plan
+a detour just because someone who is moving in the same direction is blocking a
+doorway).
+
+One problem that pops up is that each agent will explore the entire
+search space if the exit is blocked, taking up a lot of processing power and
+slowing the simulation to a crawl. This is alleviated by assuming that because
+each obstacle is permanent (fires will never go out, and walls aren't going
+anywhere unless they're replaced by fire), there is no reason to keep trying
+after the path calculation has failed once for an agent. As a result, these
+agents will stand around waiting for their impending doom, freeing up CPU time
+for their colleagues that still have a chance of making it out alive.
+
 \begin{figure}[!ht]
   \centering
 
