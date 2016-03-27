@@ -11,6 +11,7 @@ persons-own [b_walls b_fires b_exits desire intention escape_route]
 
 ; test the impact of the number of people with 1 fire source
 to test-num-persons
+  user-message "value"
   set num_fires 1
 
   let params table:make

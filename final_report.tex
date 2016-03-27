@@ -142,11 +142,11 @@ We investigate the effect of the following properties on the overall survival ra
 \item Agent FoV for spotting other agents (1, 4, 7, 10) default: 4
 \item Addition or removal of walls (1, 4, 7, 10) default: 4
 \end{itemize}
-We measure:
-\begin{itemize}
-\item Escapees
-\item Deaths
-\end{itemize}
+To analyze the overall survival rate, we track for each agent when it escapes or dies. This is measured in the number of ticks since the simulation started. 
+
+We expect that, as the number of persons increase, the variance in the survival rate will increase as well. However, when the number of persons gets sufficiently large, when someone spotted a fire it might be communicated effectively throughout the population, thereby increasing the survival rate and decreasing the variance. We can easily calculate an upper bound for this to occur. The environment is \(60\times 40\), but the outside is walls. So the effective area is \(59 \times 39 = 2301\). The communication vision for agents is 4. For ease of calculation, we shall fit a square of area 8 inside this circle. If all the agents are evenly space, then we need 288 agents to monitor the entire simulation.
+
+In practice, it is likely that we shall witness this effect already with a far smaller number of agents, as the calculation above disregards the movement of agents. Exactly how many, we will try to find out with our experiments.
 
 %\begin{itemize}
 %\item Can we prevent traffic jam behaviour?
@@ -164,7 +164,9 @@ We measure:
 
 \section{Future Work}
 There are various potential improvements to the simulation that haven't been
-implemented due to time constraints. Regarding the simulation environment, it
+implemented due to time constraints. One easy extension would be to incorporate ``Fire detector'' agents. These agents would have a higher fire vision and communication radius than other agents, but would be stationary and not die in fire. This would probably increase the survival rate if the fire detectors are space evenly in the environment.
+
+Regarding the simulation environment, it
 would be interesting to automatically generate an office layout based on some
 parameters (e.g. number of exits, wall density, width of corridors, number of
 open areas). This would allow for research to be done into the effect of the
